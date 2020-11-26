@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StoreApp.DataModel\StoreApp.Data.csproj" />
+    <ProjectReference Include="..\StoreApp.Domain\StoreApp.Domain.csproj" />
   </ItemGroup>
 
 </Project>

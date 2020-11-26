@@ -6,8 +6,10 @@ using StoreApp.Domain.Model;
 
 namespace StoreApp.Domain.Interfaces
 {
-    interface IProductRepository
+    public interface IProductRepository
     {
+        public void AddProduct(Product product);
+        public void GetAllProducts();
 
     }
 }

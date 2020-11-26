@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StoreApp.Domain.Interfaces
 {
-    interface ICustomerRepository
+    public interface ICustomerRepository
     {
         public void addCustomer(Customer customer);
         public List<Customer> GetAllCustomers();

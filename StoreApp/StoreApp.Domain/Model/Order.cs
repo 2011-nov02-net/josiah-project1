@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StoreApp.Domain.Model
 {
-    class Order
+    public class Order
     {
     }
 }

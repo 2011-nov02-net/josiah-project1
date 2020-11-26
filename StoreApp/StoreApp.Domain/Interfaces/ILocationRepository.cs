@@ -6,11 +6,11 @@ using StoreApp.Domain.Model;
 
 namespace StoreApp.Domain.Interfaces
 {
-    interface ILocationRepository
+    public interface ILocationRepository
     {
-        public void AddLocation(Location location);
-        public List<Location> GetAllLocations();
-        public void AddInventoryToLocation(Location location, List<Product> items);
+        void AddLocation(Location location);
+        List<Location> GetAllLocations();
+        void AddInventoryToLocation(Location location, List<Product> items);
 
     }
 }

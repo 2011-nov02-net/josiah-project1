@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StoreApp.Domain.Model
 {
-    class Location
+    public class Location
     {
     }
 }

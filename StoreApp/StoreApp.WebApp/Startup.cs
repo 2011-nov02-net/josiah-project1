@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StoreApp.Data;
+using StoreApp.Domain.Interfaces;
+using StoreApp.Domain.Repositories;
 
 namespace StoreApp.WebApp
 {
@@ -28,6 +30,11 @@ namespace StoreApp.WebApp
 
             services.AddDbContext<StoreAppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("default")));
+
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             services.AddControllersWithViews();
 

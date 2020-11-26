@@ -24,6 +24,10 @@ namespace StoreApp.Data
                     .IsRequired();
             });
 
+            modelBuilder.Entity<LocationEntity>()
+                .HasMany(e => e.Inventory)
+                .WithOne();
+
             modelBuilder.Entity<CustomerEntity>(entity =>
             {
                 entity.ToTable("Customers");
@@ -44,22 +48,25 @@ namespace StoreApp.Data
                 entity.Property(e => e.Price)
                     .IsRequired()
                     .HasColumnType("decimal");
-    
-                entity.Property(e => e.Amount)
-                    .IsRequired();
             });
 
             modelBuilder.Entity<OrderEntity>(entity =>
             {
-            entity.ToTable("Orders");
+                entity.ToTable("Orders");
 
-            entity.Property(e => e.Time)
-                .IsRequired();
+                entity.Property(e => e.Time)
+                    .IsRequired();
 
-            entity
-                .Navigation(e => e.Customer)
-                .IsRequired();
+                entity.Navigation(e => e.Customer)
+                    .IsRequired();
+
+                entity.Navigation(e => e.Location)
+                    .IsRequired();
             });
+
+            modelBuilder.Entity<OrderEntity>()
+                .HasMany(e => e.Items)
+                .WithOne();
         }
     }
 }

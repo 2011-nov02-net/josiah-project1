@@ -10,6 +10,6 @@ namespace StoreApp.Data
         public CustomerEntity Customer { get; set; }
         public LocationEntity Location { get; set; }
         public DateTime Time { get; set; }
-        public List<ProductEntity> Items { get; set; }
+        public IEnumerable<ProductEntity> Items { get; set; }
     }
 }

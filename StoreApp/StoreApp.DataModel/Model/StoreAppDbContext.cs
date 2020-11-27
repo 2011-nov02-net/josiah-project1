@@ -25,8 +25,7 @@ namespace StoreApp.Data
             });
 
             modelBuilder.Entity<LocationEntity>()
-                .HasMany(e => e.Inventory)
-                .WithOne();
+                .HasMany<ProductEntity>(e => e.Inventory);
 
             modelBuilder.Entity<CustomerEntity>(entity =>
             {
@@ -65,8 +64,7 @@ namespace StoreApp.Data
             });
 
             modelBuilder.Entity<OrderEntity>()
-                .HasMany(e => e.Items)
-                .WithOne();
+                .HasMany<ProductEntity>(e => e.Items);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace StoreApp.Domain.Interfaces
     public interface ICustomerRepository
     {
         public void addCustomer(Customer customer);
-        public List<Customer> GetAllCustomers();
+        public IEnumerable<Customer> GetAllCustomers();
         public bool CustomerExists(Customer customer);
     }
 }

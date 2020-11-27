@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using StoreApp.Data;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
+using System.Linq;
 
 namespace StoreApp.Domain.Repositories
 {
@@ -38,9 +39,17 @@ namespace StoreApp.Domain.Repositories
             throw new NotImplementedException();
         }
 
-        public List<Customer> GetAllCustomers()
+        public IEnumerable<Customer> GetAllCustomers()
         {
-            throw new NotImplementedException();
+            var customers = _context.Customers.ToList().Select(x => new Customer
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email
+            });
+
+            return customers;
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreApp.Data;
 
 namespace StoreApp.Data.Migrations
 {
     [DbContext(typeof(StoreAppDbContext))]
-    partial class StoreAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201128213541_DatabaseUpdate3")]
+    partial class DatabaseUpdate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

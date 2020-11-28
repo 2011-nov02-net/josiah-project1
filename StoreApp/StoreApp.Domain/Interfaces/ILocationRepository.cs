@@ -9,7 +9,7 @@ namespace StoreApp.Domain.Interfaces
     public interface ILocationRepository
     {
         void AddLocation(Location location);
-        List<Location> GetAllLocations();
+        IEnumerable<Location> GetAllLocations();
         void AddInventoryToLocation(Location location, List<Product> items);
 
     }

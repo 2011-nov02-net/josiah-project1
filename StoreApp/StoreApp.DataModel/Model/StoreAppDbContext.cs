@@ -24,8 +24,6 @@ namespace StoreApp.Data
                     .IsRequired();
             });
 
-            modelBuilder.Entity<LocationEntity>()
-                .HasMany<ProductEntity>(e => e.Inventory);
 
             modelBuilder.Entity<CustomerEntity>(entity =>
             {
@@ -42,11 +40,17 @@ namespace StoreApp.Data
             {
                 entity.ToTable("Products");
 
+                entity.HasMany(e => e.InventoryItems)
+                    .WithOne(l => l.Product);
+
+                entity.HasMany(e => e.OrderItems)
+                    .WithOne(o => o.Product);
+
                 entity.Property(e => e.Name)
                     .IsRequired();
                 entity.Property(e => e.Price)
                     .IsRequired()
-                    .HasColumnType("decimal");
+                    .HasColumnType("decimal(16,2)");
             });
 
             modelBuilder.Entity<OrderEntity>(entity =>
@@ -56,15 +60,39 @@ namespace StoreApp.Data
                 entity.Property(e => e.Time)
                     .IsRequired();
 
-                entity.Navigation(e => e.Customer)
+                entity.HasOne(e => e.Customer)
+                    .WithMany(o => o.Orders)
+                    .HasForeignKey(k => k.CustomerId)
+                    .HasConstraintName("FK_Customer_Order")
                     .IsRequired();
-
-                entity.Navigation(e => e.Location)
+                    
+                entity.HasOne(e => e.Location)
+                    .WithMany(o => o.Orders)
+                    .HasForeignKey(k => k.LocationId)
+                    .HasConstraintName("FK_Location_Order")
                     .IsRequired();
             });
 
-            modelBuilder.Entity<OrderEntity>()
-                .HasMany<ProductEntity>(e => e.Items);
+            modelBuilder.Entity<InventoryItemsEntity>(entity =>
+            {
+                entity.ToTable("InventoryItems");
+
+                entity.HasOne(e => e.Location)
+                    .WithMany(d => d.Inventory)
+                    .HasForeignKey(k => k.LocationId)
+                    .HasConstraintName("FK_Location_Item");
+            });
+
+            modelBuilder.Entity<OrderItemsEntity>(entity =>
+            {
+                entity.ToTable("OrderItems");
+
+                entity.HasOne(e => e.Order)
+                    .WithMany(d => d.Items)
+                    .HasForeignKey(k => k.OrderId)
+                    .HasConstraintName("FK_Order_Item");
+            });
+
         }
     }
 }

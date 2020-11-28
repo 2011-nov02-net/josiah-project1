@@ -4,6 +4,7 @@ using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace StoreApp.Domain.Repositories
@@ -26,12 +27,23 @@ namespace StoreApp.Domain.Repositories
 
         public void AddLocation(Location location)
         {
-            throw new NotImplementedException();
+            var new_location = new LocationEntity
+            {
+                Name = location.Name
+            };
+
+            _context.Locations.Add(new_location);
+            _context.SaveChanges();
         }
 
-        public List<Location> GetAllLocations()
+        public IEnumerable<Location> GetAllLocations()
         {
-            throw new NotImplementedException();
+            var locations = _context.Locations.ToList().Select(x => new Location
+            {
+                Name = x.Name
+            });
+
+            return locations;
         }
     }
 }

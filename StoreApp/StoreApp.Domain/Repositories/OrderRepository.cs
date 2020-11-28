@@ -23,17 +23,17 @@ namespace StoreApp.Domain.Repositories
             throw new NotImplementedException();
         }
 
-        public List<Order> GetAllOrders()
+        public IEnumerable<Order> GetAllOrders()
         {
             throw new NotImplementedException();
         }
 
-        public List<Order> GetOrdersByCustomer(Customer customer)
+        public IEnumerable<Order> GetOrdersByCustomer(Customer customer)
         {
             throw new NotImplementedException();
         }
 
-        public List<Order> GetOrdersByLocation(Location location)
+        public IEnumerable<Order> GetOrdersByLocation(Location location)
         {
             throw new NotImplementedException();
         }

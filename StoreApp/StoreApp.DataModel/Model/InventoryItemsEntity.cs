@@ -4,14 +4,14 @@ using System.Text;
 
 namespace StoreApp.Data
 {
-    public class OrderEntity
+    public class InventoryItemsEntity
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public CustomerEntity Customer { get; set; }
         public int LocationId { get; set; }
+        public int ProductId { get; set; }
+        public int Amount { get; set; }
         public LocationEntity Location { get; set; }
-        public DateTime Time { get; set; }
-        public IEnumerable<OrderItemsEntity> Items { get; set; }
+        public ProductEntity Product { get; set; }
+
     }
 }

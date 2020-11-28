@@ -23,7 +23,7 @@ namespace StoreApp.Domain.Repositories
             throw new NotImplementedException();
         }
 
-        public void GetAllProducts()
+        public IEnumerable<Product> GetAllProducts()
         {
             throw new NotImplementedException();
         }

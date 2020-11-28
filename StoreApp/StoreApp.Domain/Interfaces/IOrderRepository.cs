@@ -9,8 +9,8 @@ namespace StoreApp.Domain.Interfaces
     public interface IOrderRepository
     {
         public void AddOrder(Order order);
-        public List<Order> GetAllOrders();
-        public List<Order> GetOrdersByCustomer(Customer customer);
-        public List<Order> GetOrdersByLocation(Location location);
+        public IEnumerable<Order> GetAllOrders();
+        public IEnumerable<Order> GetOrdersByCustomer(Customer customer);
+        public IEnumerable<Order> GetOrdersByLocation(Location location);
     }
 }

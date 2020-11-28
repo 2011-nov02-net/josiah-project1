@@ -8,6 +8,8 @@ namespace StoreApp.Data
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<ProductEntity> Inventory { get; set; }
+        public IEnumerable<InventoryItemsEntity> Inventory { get; set; }
+        public IEnumerable<OrderEntity> Orders { get; set; }
+
     }
 }

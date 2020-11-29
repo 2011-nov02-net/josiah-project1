@@ -15,7 +15,7 @@ namespace StoreApp.WebApp.Controllers
         public CustomersController(ICustomerRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
             var customers = repo.GetAllCustomers().Select(x => new CustomerViewModel
             {
@@ -23,6 +23,12 @@ namespace StoreApp.WebApp.Controllers
                 LastName = x.LastName,
                 Email = x.Email
             });
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                customers = customers
+                    .Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString));
+            }
 
             return View(customers);
             

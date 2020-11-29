@@ -10,5 +10,6 @@ namespace StoreApp.Domain.Interfaces
         public void addCustomer(Customer customer);
         public IEnumerable<Customer> GetAllCustomers();
         public bool CustomerExists(Customer customer);
+        public IEnumerable<Customer> SearchCustomers(string search);
     }
 }

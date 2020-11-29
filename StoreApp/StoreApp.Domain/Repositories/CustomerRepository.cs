@@ -48,7 +48,20 @@ namespace StoreApp.Domain.Repositories
                 LastName = x.LastName,
                 Email = x.Email
             });
+            return customers;
+        }
 
+        IEnumerable<Customer> ICustomerRepository.SearchCustomers(string search)
+        {
+            var customers = _context.Customers.ToList()
+                .Where(x => x.FirstName.Contains(search) || x.LastName.Contains(search))
+                .Select(y => new Customer
+                {
+                    Id = y.Id,
+                    FirstName = y.FirstName,
+                    LastName = y.LastName,
+                    Email = y.Email
+                });
             return customers;
         }
     }

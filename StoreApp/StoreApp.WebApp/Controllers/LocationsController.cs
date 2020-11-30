@@ -18,8 +18,9 @@ namespace StoreApp.WebApp.Controllers
         {
             var customers = repo.GetAllLocations().Select(x => new LocationViewModel
             {
+                Id = x.Id,
                 Name = x.Name
-            });
+            }); ;
 
             return View(customers);
         }
@@ -48,6 +49,20 @@ namespace StoreApp.WebApp.Controllers
             {
                 return View(viewModel);
             }
+        }
+
+        public IActionResult Details(int id)
+        {
+            var location = repo.GetLocation(id);
+
+            var viewLocation = new LocationViewModel
+            {
+                Name = location.Name,
+                Id = location.Id,
+                Inventory = location.Inventory
+            };
+
+            return View(viewLocation);
         }
     }
 }

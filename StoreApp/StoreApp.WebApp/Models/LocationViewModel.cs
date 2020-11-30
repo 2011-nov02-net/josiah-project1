@@ -8,7 +8,8 @@ namespace StoreApp.WebApp.Models
 {
     public class LocationViewModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<Product> Inventory { get; set; }
+        public IDictionary<Product, int> Inventory { get; set; }
     }
 }

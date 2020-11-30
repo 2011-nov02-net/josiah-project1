@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StoreApp.Data;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
@@ -38,12 +39,30 @@ namespace StoreApp.Domain.Repositories
 
         public IEnumerable<Location> GetAllLocations()
         {
-            var locations = _context.Locations.ToList().Select(x => new Location
+            var locations = _context.Locations.Include(i => i.Inventory).ToList().Select(x => new Location
             {
+                Id = x.Id,
                 Name = x.Name
             });
 
             return locations;
+        }
+        public Location GetLocation(int id)
+        {
+            var location = _context.Locations
+                .Include(x => x.Inventory)
+                .ThenInclude(x => x.Product)
+                .Where(x => x.Id == id).First();
+            var result = new Location
+            {
+                Name = location.Name
+            };
+
+            foreach (var item in location.Inventory)
+            {
+                result.Inventory.Add(new Product { Name = item.Product.Name, Price = item.Product.Price }, item.Amount);
+            }
+            return result;
         }
     }
 }

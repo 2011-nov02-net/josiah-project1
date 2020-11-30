@@ -6,6 +6,10 @@ namespace StoreApp.Data
 {
     public class OrderEntity
     {
+        public OrderEntity()
+        {
+            Items = new List<OrderItemsEntity>();
+        }
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public CustomerEntity Customer { get; set; }

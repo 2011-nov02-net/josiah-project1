@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StoreApp.Data;
 using StoreApp.Domain.Interfaces;
@@ -25,7 +27,21 @@ namespace StoreApp.Domain.Repositories
 
         public IEnumerable<Order> GetAllOrders()
         {
+            List<Order> result = new List<Order>();
+            var orders = _context.Orders.ToList();
+
+            foreach (var order in orders)
+            {
+                var orderItems = _context.OrderItems
+                    .Include(x => x.Product)
+                    .Include(x => x.Amount)
+                    .Where(x => x.OrderId == order.Id).ToList();
+
+
+            }
+
             throw new NotImplementedException();
+
         }
 
         public IEnumerable<Order> GetOrdersByCustomer(Customer customer)

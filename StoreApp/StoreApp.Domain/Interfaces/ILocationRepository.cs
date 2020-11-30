@@ -11,5 +11,6 @@ namespace StoreApp.Domain.Interfaces
         void AddLocation(Location location);
         IEnumerable<Location> GetAllLocations();
         void AddInventoryToLocation(Location location, List<Product> items);
+        Location GetLocation(int id);
     }
 }

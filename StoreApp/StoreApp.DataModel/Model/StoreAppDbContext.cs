@@ -13,6 +13,8 @@ namespace StoreApp.Data
         public DbSet<LocationEntity> Locations { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<ProductEntity> Products { get; set; }
+        public DbSet<OrderItemsEntity> OrderItems { get; set; }
+        public DbSet<InventoryItemsEntity> InventoryItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,7 +26,6 @@ namespace StoreApp.Data
                     .IsRequired();
             });
 
-
             modelBuilder.Entity<CustomerEntity>(entity =>
             {
                 entity.ToTable("Customers");
@@ -32,6 +33,8 @@ namespace StoreApp.Data
                 entity.Property(e => e.FirstName)
                     .IsRequired();
                 entity.Property(e => e.LastName)
+                    .IsRequired();
+                entity.Property(e => e.Email)
                     .IsRequired();
 
             });

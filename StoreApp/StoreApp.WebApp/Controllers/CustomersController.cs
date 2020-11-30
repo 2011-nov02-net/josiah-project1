@@ -29,7 +29,6 @@ namespace StoreApp.WebApp.Controllers
                 customers = customers
                     .Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString));
             }
-
             return View(customers);
             
         }

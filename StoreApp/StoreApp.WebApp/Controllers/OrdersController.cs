@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StoreApp.Domain.Interfaces;
+using StoreApp.Domain.Model;
 using StoreApp.WebApp.Models;
 
 namespace StoreApp.WebApp.Controllers
@@ -16,6 +17,12 @@ namespace StoreApp.WebApp.Controllers
 
         public IActionResult Index()
         {
+            var orders = repo.GetAllOrders().Select(x => new Order
+            {
+
+            }
+            );
+
             return View();
         }
         public IActionResult Create()

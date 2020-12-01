@@ -11,8 +11,8 @@ namespace StoreApp.WebApp.Controllers
 {
     public class CustomersController : Controller
     {
-        public ICustomerRepository repo { get; }
-        public CustomersController(ICustomerRepository Repo) =>
+        private IStoreRepository repo { get; }
+        public CustomersController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
 
         public IActionResult Index(string searchString)

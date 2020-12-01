@@ -11,8 +11,8 @@ namespace StoreApp.WebApp.Controllers
 {
     public class LocationsController : Controller
     {
-        public ILocationRepository repo { get; }
-        public LocationsController(ILocationRepository Repo) =>
+        private IStoreRepository repo { get; }
+        public LocationsController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
         public IActionResult Index()
         {

@@ -9,8 +9,8 @@ namespace StoreApp.WebApp.Controllers
 {
     public class ProductsController : Controller
     {
-        public IProductRepository repo { get; }
-        public ProductsController(IProductRepository Repo) =>
+        private IStoreRepository repo { get; }
+        public ProductsController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
         public IActionResult Index()
         {

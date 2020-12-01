@@ -12,6 +12,6 @@ namespace StoreApp.WebApp.Models
         public Customer Customer { get; set; }
         public Location Location { get; set; }
         public DateTime Time { get; set; }
-        public IEnumerable<ProductViewModel> Items { get; set; }
+        public IDictionary<Product, int> Items { get; set; }
     }
 }

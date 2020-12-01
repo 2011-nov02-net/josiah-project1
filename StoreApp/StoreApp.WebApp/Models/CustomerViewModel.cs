@@ -8,6 +8,7 @@ namespace StoreApp.WebApp.Models
 {
     public class CustomerViewModel
     {
+        public int Id { get; set; }
         [Display(Name = "First name")]
         [Required(ErrorMessage ="First name is required")]
         public string FirstName { get; set; }

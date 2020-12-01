@@ -11,22 +11,42 @@ namespace StoreApp.WebApp.Controllers
 {
     public class OrdersController : Controller
     {
-        public IOrderRepository repo { get; }
-        public OrdersController(IOrderRepository Repo) =>
+        private IStoreRepository repo { get; }
+        public OrdersController(IStoreRepository Repo)
+        {
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
+        }
 
         public IActionResult Index()
         {
-            var orders = repo.GetAllOrders().Select(x => new Order
+            var orders = repo.GetAllOrders().Select(x => new OrderViewModel
             {
-
+                Customer = x.Customer,
+                Location = x.Location,
+                Time = x.Time,
+                Items = x.Items
             }
             );
 
-            return View();
+            return View(orders);
         }
         public IActionResult Create()
         {
+            var customers = repo.GetAllCustomers().Select(x => new CustomerViewModel
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email
+            }).ToList();
+
+            var locations = repo.GetAllLocations().Select(x => new LocationViewModel
+            {
+                Name = x.Name
+            }).ToList();
+
+            ViewData["Customers"] = customers;
+            ViewData["Locations"] = locations;
 
             return View();
         }

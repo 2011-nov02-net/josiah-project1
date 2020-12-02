@@ -53,7 +53,7 @@ namespace StoreApp.WebApp.Controllers
         }
         public async Task<IActionResult> Details(int id)
         {
-            var location = await repo.GetLocationAsync(id);
+            var location = await repo.GetLocationDetailsAsync(id);
 
             var viewLocation = new LocationViewModel
             {

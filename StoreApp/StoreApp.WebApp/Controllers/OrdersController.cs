@@ -17,22 +17,22 @@ namespace StoreApp.WebApp.Controllers
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var orders = repo.GetAllOrders().Select(x => new OrderViewModel
+            var data = await repo.GetAllOrdersAsync();
+            var orders = data.Select(x => new OrderViewModel
             {
                 Customer = x.Customer,
                 Location = x.Location,
                 Time = x.Time,
                 Items = x.Items
-            }
-            );
-
+            });
             return View(orders);
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var customers = repo.GetAllCustomers().Select(x => new CustomerViewModel
+            var custData = await repo.GetAllCustomersAsync();
+            var customers = custData.Select(x => new CustomerViewModel
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
@@ -40,7 +40,8 @@ namespace StoreApp.WebApp.Controllers
                 Email = x.Email
             }).ToList();
 
-            var locations = repo.GetAllLocations().Select(x => new LocationViewModel
+            var locData = await repo.GetAllLocationsAsync();
+            var locations = locData.Select(x => new LocationViewModel
             {
                 Name = x.Name
             }).ToList();
@@ -51,7 +52,7 @@ namespace StoreApp.WebApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(OrderViewModel viewModel)
+        public async Task<IActionResult> Create(OrderViewModel viewModel)
         {
             return View();
         }

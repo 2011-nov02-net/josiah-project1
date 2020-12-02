@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace StoreApp.Domain.Repositories
 {
@@ -19,7 +20,11 @@ namespace StoreApp.Domain.Repositories
             _context = context ?? throw new ArgumentNullException();
             _logger = logger ?? throw new ArgumentNullException();
         }
-        public void addCustomer(Customer customer)
+        public void AddCustomer(Customer customer)
+        {
+            
+        }
+        public async Task AddCustomerAsync(Customer customer)
         {
             var new_customer = new CustomerEntity
             {
@@ -35,6 +40,10 @@ namespace StoreApp.Domain.Repositories
         {
             throw new NotImplementedException();
         }
+        public async Task<bool> CustomerExistsAsync(Customer customer)
+        {
+            throw new NotImplementedException();
+        }
         public IEnumerable<Customer> GetAllCustomers()
         {
             var customers = _context.Customers.ToList().Select(x => new Customer
@@ -44,6 +53,18 @@ namespace StoreApp.Domain.Repositories
                 LastName = x.LastName,
                 Email = x.Email
             });
+            return customers;
+        }
+        public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
+        {
+            var data = await _context.Customers.ToListAsync();
+            var customers = await Task.Run(() => data.Select(x => new Customer
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email
+            }));
             return customers;
         }
         public IEnumerable<Customer> SearchCustomers(string search)
@@ -59,7 +80,7 @@ namespace StoreApp.Domain.Repositories
                 });
             return customers;
         }
-        public void AddInventoryToLocation(Location location, List<Product> items)
+        public Task<IEnumerable<Customer>> SearchCustomersAsync(string search)
         {
             throw new NotImplementedException();
         }
@@ -73,6 +94,10 @@ namespace StoreApp.Domain.Repositories
             _context.Locations.Add(new_location);
             _context.SaveChanges();
         }
+        public Task AddLocationAsync(Location location)
+        {
+            throw new NotImplementedException();
+        }
         public IEnumerable<Location> GetAllLocations()
         {
             var locations = _context.Locations.Include(i => i.Inventory).ToList().Select(x => new Location
@@ -82,6 +107,18 @@ namespace StoreApp.Domain.Repositories
             });
 
             return locations;
+        }
+        public Task<IEnumerable<Location>> GetAllLocationsAsync()
+        {
+            throw new NotImplementedException();
+        }
+        public void AddInventoryToLocation(Location location, List<Product> items)
+        {
+            throw new NotImplementedException();
+        }
+        public Task AddInventoryToLocationAsync(Location location, List<Product> items)
+        {
+            throw new NotImplementedException();
         }
         public Location GetLocation(int id)
         {
@@ -100,7 +137,15 @@ namespace StoreApp.Domain.Repositories
             }
             return result;
         }
+        public Task<Location> GetLocationAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
         public void AddOrder(Order order)
+        {
+            throw new NotImplementedException();
+        }
+        public Task AddOrderAsync(Order order)
         {
             throw new NotImplementedException();
         }
@@ -134,7 +179,15 @@ namespace StoreApp.Domain.Repositories
             return result;
 
         }
+        public Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            throw new NotImplementedException();
+        }
         public IEnumerable<Order> GetOrdersByCustomer(Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<IEnumerable<Order>> GetOrdersByCustomerAsync(Customer customer)
         {
             throw new NotImplementedException();
         }
@@ -142,11 +195,23 @@ namespace StoreApp.Domain.Repositories
         {
             throw new NotImplementedException();
         }
+        public Task<IEnumerable<Order>> GetOrdersByLocationAsync(Location location)
+        {
+            throw new NotImplementedException();
+        }
         public void AddProduct(Product product)
         {
             throw new NotImplementedException();
         }
+        public Task AddProductAsync(Product product)
+        {
+            throw new NotImplementedException();
+        }
         public IEnumerable<Product> GetAllProducts()
+        {
+            throw new NotImplementedException();
+        }
+        public Task<IEnumerable<Product>> GetAllProductsAsync()
         {
             throw new NotImplementedException();
         }

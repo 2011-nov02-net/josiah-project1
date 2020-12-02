@@ -15,29 +15,29 @@ namespace StoreApp.WebApp.Controllers
         public CustomersController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
 
-        public IActionResult Index(string searchString)
+        public async Task<IActionResult> Index(string searchString)
         {
-            var customers = repo.GetAllCustomers().Select(x => new CustomerViewModel
+            var data = await repo.GetAllCustomersAsync();
+            var customers = await Task.Run(() => data.Select(x => new CustomerViewModel
             {
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email
-            });
+            }));
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                customers = customers
-                    .Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString));
+                customers = await Task.Run(() => customers
+                    .Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString)));
             }
             return View(customers);
-            
         }
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CustomerViewModel viewModel)
+        public async Task<IActionResult> Create(CustomerViewModel viewModel)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace StoreApp.WebApp.Controllers
                         LastName = viewModel.LastName,
                         Email = viewModel.Email
                     };
-                    repo.addCustomer(customer);
+                    await repo.AddCustomerAsync(customer);
 
                     return RedirectToAction(nameof(Index));
                 }

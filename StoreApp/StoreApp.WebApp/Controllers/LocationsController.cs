@@ -14,22 +14,23 @@ namespace StoreApp.WebApp.Controllers
         private IStoreRepository repo { get; }
         public LocationsController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var customers = repo.GetAllLocations().Select(x => new LocationViewModel
+            var data = await repo.GetAllLocationsAsync();
+            var locations = data.Select(x => new LocationViewModel
             {
                 Id = x.Id,
                 Name = x.Name
             }); ;
 
-            return View(customers);
+            return View(locations);
         }
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Create(LocationViewModel viewModel)
+        public async Task<IActionResult> Create(LocationViewModel viewModel)
         {
             try
             {
@@ -39,7 +40,7 @@ namespace StoreApp.WebApp.Controllers
                     {
                         Name = viewModel.Name
                     };
-                    repo.AddLocation(location);
+                    await repo.AddLocationAsync(location);
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -50,10 +51,9 @@ namespace StoreApp.WebApp.Controllers
                 return View(viewModel);
             }
         }
-
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var location = repo.GetLocation(id);
+            var location = await repo.GetLocationAsync(id);
 
             var viewLocation = new LocationViewModel
             {

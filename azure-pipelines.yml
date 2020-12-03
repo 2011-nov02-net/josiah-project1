@@ -26,6 +26,8 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'jetwash787_order-app'
     projectName: 'order-app'
+    extraProperties: sonar.exclusions=**/lib/**
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build'
   workingDirectory: StoreApp

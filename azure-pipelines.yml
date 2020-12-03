@@ -18,7 +18,16 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
+
+
 steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonar cloud connection'
+    organization: 'jetwash787'
+    scannerMode: 'MSBuild'
+    projectKey: 'jetwash787_order-app'
+    projectName: 'order-app'
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build'
   workingDirectory: StoreApp
@@ -41,14 +50,6 @@ steps:
     packageForLinux: 'StoreApp/publish'
 
 - task: PublishBuildArtifacts@1
-
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'sonar cloud connection'
-    organization: 'jetwash787'
-    scannerMode: 'MSBuild'
-    projectKey: 'jetwash787_order-app'
-    projectName: 'order-app'
 
 - task: SonarCloudAnalyze@1
 

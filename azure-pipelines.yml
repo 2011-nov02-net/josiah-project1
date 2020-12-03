@@ -10,6 +10,7 @@ trigger:
   paths:
     include:
       - StoreApp
+      - azure-pipelines.yml
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -25,4 +26,3 @@ steps:
 - script: dotnet test --no-build --configuration $(buildConfiguration)
   displayName: 'dotnet test'
   workingDirectory: StoreApp
-  publishTestResults: true

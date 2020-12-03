@@ -26,10 +26,10 @@ namespace StoreApp.Domain.Interfaces
         public Task AddOrderAsync(Order order);
         public IEnumerable<Order> GetAllOrders();
         public Task<IEnumerable<Order>> GetAllOrdersAsync();
-        public IEnumerable<Order> GetOrdersByCustomer(Customer customer);
-        public Task<IEnumerable<Order>> GetOrdersByCustomerAsync(Customer customer);
-        public IEnumerable<Order> GetOrdersByLocation(Location location);
-        public Task<IEnumerable<Order>> GetOrdersByLocationAsync(Location location);
+        public IEnumerable<Order> GetOrdersByCustomer(int id);
+        public Task<IEnumerable<Order>> GetOrdersByCustomerAsync(int id);
+        public IEnumerable<Order> GetOrdersByLocation(int id);
+        public Task<IEnumerable<Order>> GetOrdersByLocationAsync(int id);
         public void AddProduct(Product product);
         public Task AddProductAsync(Product product);
         public IEnumerable<Product> GetAllProducts();

@@ -40,7 +40,8 @@
 <div>
     @foreach (var order in orders)
     {
-        @order.Location.Name
+        @order.Location.Name;
+        @order.Items.Count;
     }
 </div>
 <div>

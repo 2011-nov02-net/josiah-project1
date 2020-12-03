@@ -186,39 +186,48 @@ namespace StoreApp.Domain.Repositories
             var orders = _context.Orders;
             return await GetOrdersHelperAsync(orders);
         }
-        public IEnumerable<Order> GetOrdersByCustomer(Customer customer)
-        {
-            var orders = _context.Orders.Where(x => x.CustomerId == customer.Id);
-            return GetOrdersHelper(orders);
-        }
-        public async Task<IEnumerable<Order>> GetOrdersByCustomerAsync(Customer customer)
+        public IEnumerable<Order> GetOrdersByCustomer(int id)
         {
             var orders = _context.Orders
                 .Include(x => x.Location)
                 .Include(x => x.Customer)
-                .Include(x => x.Items)
-                .Where(x => x.Id == customer.Id);
-            return await GetOrdersHelperAsync(orders);
-        }
-        public IEnumerable<Order> GetOrdersByLocation(Location location)
-        {
-            var orders = _context.Orders.Where(x => x.LocationId == location.Id);
+                .Include(x => x.Items).ThenInclude(x => x.Product)
+                .Where(x => x.CustomerId == id).ToList();
             return GetOrdersHelper(orders);
         }
-        public async Task<IEnumerable<Order>> GetOrdersByLocationAsync(Location location)
+        public async Task<IEnumerable<Order>> GetOrdersByCustomerAsync(int id)
         {
-            var orders = _context.Orders.Where(x => x.LocationId == location.Id);
-            return await GetOrdersHelperAsync(orders);
+            var orders = await _context.Orders
+                .Include(x => x.Location)
+                .Include(x => x.Customer)
+                .Include(x => x.Items).ThenInclude(x => x.Product)
+                .Where(x => x.CustomerId == id).ToListAsync();
+
+            return GetOrdersHelper(orders);
         }
-        public IEnumerable<Order> GetOrdersHelper(IQueryable<OrderEntity> orders)
+        public IEnumerable<Order> GetOrdersByLocation(int id)
+        {
+            var orders = _context.Orders
+                .Include(x => x.Location)
+                .Include(x => x.Customer)
+                .Include(x => x.Items).ThenInclude(x => x.Product)
+                .Where(x => x.LocationId == id).ToList();
+            return GetOrdersHelper(orders);
+        }
+        public async Task<IEnumerable<Order>> GetOrdersByLocationAsync(int id)
+        {
+            var orders = await _context.Orders
+                .Include(x => x.Location)
+                .Include(x => x.Customer)
+                .Include(x => x.Items).ThenInclude(x => x.Product)
+                .Where(x => x.LocationId == id).ToListAsync();
+            return GetOrdersHelper(orders);
+        }
+        public IEnumerable<Order> GetOrdersHelper(IEnumerable<OrderEntity> orders)
         {
             List<Order> result = new List<Order>();
             foreach (var order in orders)
             {
-                var orderItems = _context.OrderItems
-                    .Include(x => x.Product)
-                    .Include(x => x.Amount)
-                    .Where(x => x.OrderId == order.Id).ToList();
 
                 var temp_order = new Order
                 {
@@ -227,7 +236,7 @@ namespace StoreApp.Domain.Repositories
                     Time = order.Time,
                     Id = order.Id,
                 };
-                foreach (var item in orderItems)
+                foreach (var item in order.Items)
                 {
                     temp_order.Items.Add(new Product { Name = item.Product.Name, Price = item.Product.Price, Id = item.Product.Id }, item.Amount);
                 }

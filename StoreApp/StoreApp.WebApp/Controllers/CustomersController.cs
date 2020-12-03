@@ -28,6 +28,7 @@ namespace StoreApp.WebApp.Controllers
             }
             var customers = data.Select(x => new CustomerViewModel
             {
+                Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email
@@ -63,18 +64,21 @@ namespace StoreApp.WebApp.Controllers
                 return View(viewModel);
             }
         }
-        public async Task<IActionResult> Orders(CustomerViewModel customer)
+        public async Task<IActionResult> Orders(int id)
         {
-            var data = await repo.GetOrdersByCustomerAsync(new Customer { Id = customer.Id });
+            var data = await repo.GetOrdersByCustomerAsync(id);
             var orders = data.Select(x => new OrderViewModel
             {
                 Id = x.Id,
                 Location = x.Location,
                 Customer = x.Customer,
-                Time = x.Time
+                Time = x.Time,
+                Items = x.Items
             }).ToList();
+
             ViewData["Orders"] = orders;
-            return View(customer);
+
+            return View();
         }
     }
 }

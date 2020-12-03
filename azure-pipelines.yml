@@ -27,7 +27,12 @@ steps:
   displayName: 'dotnet test'
   workingDirectory: StoreApp
 
+- script: dotnet publish --configuration $(buildConfiguration) --output publish
+  displayName: dotnet publish
+  workingDirectory: StoreApp
+
 - task: AzureRmWebAppDeployment@4
+  displayName: azure app service deploy
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Azure subscription 1(f7e52e4c-88e0-4b61-ac00-4e94765c9a23)'

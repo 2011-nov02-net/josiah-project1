@@ -34,3 +34,5 @@ steps:
     appType: 'webApp'
     WebAppName: 'liberatore-training-app'
     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+
+- task: PublishBuildArtifacts@1

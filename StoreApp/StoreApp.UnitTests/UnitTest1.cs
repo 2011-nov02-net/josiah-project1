@@ -18,5 +18,15 @@ namespace StoreApp.UnitTests
 
             Assert.True(customer.FirstName == "John" && customer.LastName == "Smith" && customer.Email == "jsmith@gmail.com");
         }
+        [Fact]
+        public void ProductInstantiationTest()
+        {
+            var product = new Product
+            {
+                Name = "Pop Rocks",
+                Price = 3
+            };
+            Assert.True(product.Name == "Pop Rocks" && product.Price == 3);
+        }
     }
 }

@@ -21,3 +21,8 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build'
   workingDirectory: StoreApp
+
+- script: dotnet test --no-build --configuration $(buildConfiguration)
+  displayName: 'dotnet test'
+  workingDirectory: StoreApp
+  publishTestResults: true

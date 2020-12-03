@@ -17,19 +17,22 @@ namespace StoreApp.WebApp.Controllers
 
         public async Task<IActionResult> Index(string searchString)
         {
-            var data = await repo.GetAllCustomersAsync();
-            var customers = await Task.Run(() => data.Select(x => new CustomerViewModel
+            IEnumerable<Customer> data;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                data = await repo.SearchCustomersAsync(searchString);
+            }
+            else
+            {
+                data = await repo.GetAllCustomersAsync();
+            }
+            var customers = data.Select(x => new CustomerViewModel
             {
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email
-            }));
+            });
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                customers = await Task.Run(() => customers
-                    .Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString)));
-            }
             return View(customers);
         }
         public IActionResult Create()
@@ -60,6 +63,18 @@ namespace StoreApp.WebApp.Controllers
                 return View(viewModel);
             }
         }
-
+        public async Task<IActionResult> Orders(CustomerViewModel customer)
+        {
+            var data = await repo.GetOrdersByCustomerAsync(new Customer { Id = customer.Id });
+            var orders = data.Select(x => new OrderViewModel
+            {
+                Id = x.Id,
+                Location = x.Location,
+                Customer = x.Customer,
+                Time = x.Time
+            }).ToList();
+            ViewData["Orders"] = orders;
+            return View(customer);
+        }
     }
 }

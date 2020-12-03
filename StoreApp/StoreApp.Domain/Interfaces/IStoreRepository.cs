@@ -12,8 +12,6 @@ namespace StoreApp.Domain.Interfaces
         public Task AddCustomerAsync(Customer customer);
         public IEnumerable<Customer> GetAllCustomers();
         public Task<IEnumerable<Customer>> GetAllCustomersAsync();
-        public bool CustomerExists(Customer customer);
-        public Task<bool> CustomerExistsAsync(Customer customer);
         public IEnumerable<Customer> SearchCustomers(string search);
         public Task<IEnumerable<Customer>> SearchCustomersAsync(string search);
         public void AddLocation(Location location);

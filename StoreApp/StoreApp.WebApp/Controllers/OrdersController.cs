@@ -46,8 +46,16 @@ namespace StoreApp.WebApp.Controllers
                 Name = x.Name
             }).ToList();
 
+            var prodData = await repo.GetAllProductsAsync();
+            var products = prodData.Select(x => new ProductViewModel
+            {
+                Name = x.Name,
+                Price = x.Price
+            }).ToList();
+
             ViewData["Customers"] = customers;
             ViewData["Locations"] = locations;
+            ViewData["Products"] = products;
 
             return View();
         }

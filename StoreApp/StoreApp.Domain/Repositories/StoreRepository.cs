@@ -36,14 +36,6 @@ namespace StoreApp.Domain.Repositories
             await _context.Customers.AddAsync(new_customer);
             _context.SaveChanges();
         }
-        public bool CustomerExists(Customer customer)
-        {
-            throw new NotImplementedException();
-        } // TODO
-        public async Task<bool> CustomerExistsAsync(Customer customer)
-        {
-            throw new NotImplementedException();
-        } // TODO
         public IEnumerable<Customer> GetAllCustomers()
         {
             var customers = _context.Customers.ToList().Select(x => new Customer
@@ -186,9 +178,41 @@ namespace StoreApp.Domain.Repositories
         } //TODO
         public IEnumerable<Order> GetAllOrders()
         {
-            List<Order> result = new List<Order>();
             var orders = _context.Orders;
-
+            return GetOrdersHelper(orders);
+        }
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            var orders = _context.Orders;
+            return await GetOrdersHelperAsync(orders);
+        }
+        public IEnumerable<Order> GetOrdersByCustomer(Customer customer)
+        {
+            var orders = _context.Orders.Where(x => x.CustomerId == customer.Id);
+            return GetOrdersHelper(orders);
+        }
+        public async Task<IEnumerable<Order>> GetOrdersByCustomerAsync(Customer customer)
+        {
+            var orders = _context.Orders
+                .Include(x => x.Location)
+                .Include(x => x.Customer)
+                .Include(x => x.Items)
+                .Where(x => x.Id == customer.Id);
+            return await GetOrdersHelperAsync(orders);
+        }
+        public IEnumerable<Order> GetOrdersByLocation(Location location)
+        {
+            var orders = _context.Orders.Where(x => x.LocationId == location.Id);
+            return GetOrdersHelper(orders);
+        }
+        public async Task<IEnumerable<Order>> GetOrdersByLocationAsync(Location location)
+        {
+            var orders = _context.Orders.Where(x => x.LocationId == location.Id);
+            return await GetOrdersHelperAsync(orders);
+        }
+        public IEnumerable<Order> GetOrdersHelper(IQueryable<OrderEntity> orders)
+        {
+            List<Order> result = new List<Order>();
             foreach (var order in orders)
             {
                 var orderItems = _context.OrderItems
@@ -210,15 +234,11 @@ namespace StoreApp.Domain.Repositories
 
                 result.Add(temp_order);
             }
-
             return result;
-
         }
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        public async Task<IEnumerable<Order>> GetOrdersHelperAsync(IQueryable<OrderEntity> orders)
         {
             List<Order> result = new List<Order>();
-            var orders = _context.Orders;
-
             foreach (var order in orders)
             {
                 var orderItems = await _context.OrderItems
@@ -240,40 +260,50 @@ namespace StoreApp.Domain.Repositories
 
                 result.Add(temp_order);
             }
-
             return result;
         }
-        public IEnumerable<Order> GetOrdersByCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
-        } //TODO
-        public Task<IEnumerable<Order>> GetOrdersByCustomerAsync(Customer customer)
-        {
-            throw new NotImplementedException();
-        } //TODO
-        public IEnumerable<Order> GetOrdersByLocation(Location location)
-        {
-            throw new NotImplementedException();
-        } //TODO
-        public Task<IEnumerable<Order>> GetOrdersByLocationAsync(Location location)
-        {
-            throw new NotImplementedException();
-        } //TODO
         public void AddProduct(Product product)
         {
-            throw new NotImplementedException();
-        } //TODO
-        public Task AddProductAsync(Product product)
+            var new_product = new ProductEntity
+            {
+                Name = product.Name,
+                Price = product.Price
+            };
+
+            _context.Products.Add(new_product);
+            _context.SaveChanges();
+        }
+        public async Task AddProductAsync(Product product)
         {
-            throw new NotImplementedException();
-        } //TODO
+            var new_product = new ProductEntity
+            {
+                Name = product.Name,
+                Price = product.Price
+            };
+
+            await _context.Products.AddAsync(new_product);
+            _context.SaveChanges();
+        }
         public IEnumerable<Product> GetAllProducts()
         {
-            throw new NotImplementedException();
-        } //TODO
-        public Task<IEnumerable<Product>> GetAllProductsAsync()
+            var products = _context.Products.ToList().Select(x => new Product
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Price = x.Price
+            });
+            return products;
+        }
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
         {
-            throw new NotImplementedException();
-        } //TODO
+            var data = await _context.Products.ToListAsync();
+            var products = data.Select(x => new Product
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Price = x.Price
+            });
+            return products;
+        }
     }
 }

@@ -26,3 +26,11 @@ steps:
 - script: dotnet test --no-build --configuration $(buildConfiguration)
   displayName: 'dotnet test'
   workingDirectory: StoreApp
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(f7e52e4c-88e0-4b61-ac00-4e94765c9a23)'
+    appType: 'webApp'
+    WebAppName: 'liberatore-training-app'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'

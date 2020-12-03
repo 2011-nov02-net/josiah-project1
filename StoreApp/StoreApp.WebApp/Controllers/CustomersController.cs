@@ -78,7 +78,16 @@ namespace StoreApp.WebApp.Controllers
 
             ViewData["Orders"] = orders;
 
-            return View();
+            var data2 = await repo.GetCustomerByIdAsync(id);
+
+            var customer = new CustomerViewModel
+            {
+                Id = data2.Id,
+                FirstName = data2.FirstName,
+                LastName = data2.LastName,
+                Email = data2.Email
+            };
+            return View(customer);
         }
     }
 }

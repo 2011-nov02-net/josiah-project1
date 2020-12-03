@@ -86,6 +86,30 @@ namespace StoreApp.Domain.Repositories
                 });
             return customers;
         }
+        public Customer GetCustomerById(int id)
+        {
+            var data = _context.Customers.Where(x => x.Id == id).First();
+            var customer = new Customer
+            {
+                Id = data.Id,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                Email = data.Email
+            };
+            return customer;
+        }
+        public async Task<Customer> GetCustomerByIdAsync(int id)
+        {
+            var data = await _context.Customers.Where(x => x.Id == id).FirstAsync();
+            var customer = new Customer
+            {
+                Id = data.Id,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                Email = data.Email
+            };
+            return customer;
+        }
         public void AddLocation(Location location)
         {
             var new_location = new LocationEntity

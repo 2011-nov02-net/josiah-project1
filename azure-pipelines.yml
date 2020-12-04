@@ -19,6 +19,15 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'sonar cloud connection'
+    organization: 'jetwash787'
+    scannerMode: 'MSBuild'
+    projectKey: 'jetwash787_order-app'
+    projectName: 'order-app'
+    extraProperties: sonar.exclusions=**/lib/**
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build'
   workingDirectory: StoreApp
@@ -40,4 +49,8 @@ steps:
     WebAppName: 'liberatore-training-app'
     packageForLinux: 'StoreApp/publish'
 
-- task: PublishBuildArtifacts@1
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'

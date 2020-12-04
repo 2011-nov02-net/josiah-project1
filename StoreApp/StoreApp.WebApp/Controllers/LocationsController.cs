@@ -51,9 +51,11 @@ namespace StoreApp.WebApp.Controllers
                 return View(viewModel);
             }
         }
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Orders(int id)
         {
             var location = await repo.GetLocationDetailsAsync(id);
+
+            var orders = await repo.GetOrdersByLocationAsync(id);
 
             var viewLocation = new LocationViewModel
             {
@@ -61,6 +63,30 @@ namespace StoreApp.WebApp.Controllers
                 Id = location.Id,
                 Inventory = location.Inventory
             };
+
+            Dictionary<Order, double> prices = new Dictionary<Order, double>();
+
+            foreach (var order in orders)
+            {
+                double price = 0;
+                foreach (var item in order.Items)
+                {
+                    price += (double)item.Key.Price * item.Value;
+                }
+                prices.Add(order, price);
+            }
+
+            var viewOrders = orders.Select(x => new OrderViewModel
+            {
+                Id = x.Id,
+                Customer = x.Customer,
+                Location = x.Location,
+                Time = x.Time,
+                Items = x.Items,
+                Price = prices[x]
+            }).ToList();
+
+            ViewData["Orders"] = viewOrders;
 
             return View(viewLocation);
         }

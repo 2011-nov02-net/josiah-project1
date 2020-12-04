@@ -10,7 +10,7 @@
 <h1>Create</h1>
 
 <h4>OrderViewModel</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -19,6 +19,7 @@
 
             <div class="form-group">
                 <select id="CustomerList">
+                    <option style="display:none">-- select customer --</option>
                     @foreach (var customer in customers)
                     {
                         @:<option Value=@customer.Id> @(customer.FirstName + " " + customer.LastName) </option>
@@ -28,24 +29,19 @@
 
             <div class="form-group">
                 <select id="LocationList">
+                    <option style="display:none">-- select location --</option>
                     @foreach (var location in locations)
                     {
                         @:<option Value=@location.Id> @location.Name </option>
                     }
                 </select>
             </div>
-
-            <div class="form-group">
-                <select id="ProductList">
-                    @foreach (var product in products)
-                    {
-                        @:<option Value=@product.Id> @product.Name - @(string.Format("{0:C}", product.Price)) </option>
-                    }
-                </select>
+            <div>
+                <input type ="submit" value="Add Product" asp-action="Product" class="btn btn-primary" />
             </div>
-
+            <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Place Order" class="btn btn-primary" />
             </div>
         </form>
     </div>

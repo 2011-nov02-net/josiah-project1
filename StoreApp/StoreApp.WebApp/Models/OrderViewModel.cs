@@ -12,6 +12,8 @@ namespace StoreApp.WebApp.Models
         public Customer Customer { get; set; }
         public Location Location { get; set; }
         public DateTime Time { get; set; }
+        public double Price { get; set; }
         public IDictionary<Product, int> Items { get; set; }
+        
     }
 }

@@ -67,13 +67,27 @@ namespace StoreApp.WebApp.Controllers
         public async Task<IActionResult> Orders(int id)
         {
             var data = await repo.GetOrdersByCustomerAsync(id);
+
+            Dictionary<Order, double> prices = new Dictionary<Order, double>();
+
+            foreach (var order in data)
+            {
+                double price = 0;
+                foreach (var item in order.Items)
+                {
+                    price += (double)item.Key.Price * item.Value;
+                }
+                prices.Add(order, price);
+            }
+
             var orders = data.Select(x => new OrderViewModel
             {
                 Id = x.Id,
                 Location = x.Location,
                 Customer = x.Customer,
                 Time = x.Time,
-                Items = x.Items
+                Items = x.Items,
+                Price = prices[x]
             }).ToList();
 
             ViewData["Orders"] = orders;
@@ -89,5 +103,6 @@ namespace StoreApp.WebApp.Controllers
             };
             return View(customer);
         }
+
     }
 }

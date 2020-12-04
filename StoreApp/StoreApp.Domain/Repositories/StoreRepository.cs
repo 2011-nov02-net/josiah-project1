@@ -202,13 +202,19 @@ namespace StoreApp.Domain.Repositories
         } //TODO
         public IEnumerable<Order> GetAllOrders()
         {
-            var orders = _context.Orders;
+            var orders = _context.Orders
+                .Include(x => x.Location)
+                .Include(x => x.Customer)
+                .Include(x => x.Items).ThenInclude(x => x.Product).ToList();
             return GetOrdersHelper(orders);
         }
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            var orders = _context.Orders;
-            return await GetOrdersHelperAsync(orders);
+            var orders = await _context.Orders
+                .Include(x => x.Location)
+                .Include(x => x.Customer)
+                .Include(x => x.Items).ThenInclude(x => x.Product).ToListAsync();
+            return GetOrdersHelper(orders);
         }
         public IEnumerable<Order> GetOrdersByCustomer(int id)
         {
@@ -252,7 +258,6 @@ namespace StoreApp.Domain.Repositories
             List<Order> result = new List<Order>();
             foreach (var order in orders)
             {
-
                 var temp_order = new Order
                 {
                     Customer = new Customer { FirstName = order.Customer.FirstName, LastName = order.Customer.LastName, Id = order.CustomerId },
@@ -261,32 +266,6 @@ namespace StoreApp.Domain.Repositories
                     Id = order.Id,
                 };
                 foreach (var item in order.Items)
-                {
-                    temp_order.Items.Add(new Product { Name = item.Product.Name, Price = item.Product.Price, Id = item.Product.Id }, item.Amount);
-                }
-
-                result.Add(temp_order);
-            }
-            return result;
-        }
-        public async Task<IEnumerable<Order>> GetOrdersHelperAsync(IQueryable<OrderEntity> orders)
-        {
-            List<Order> result = new List<Order>();
-            foreach (var order in orders)
-            {
-                var orderItems = await _context.OrderItems
-                    .Include(x => x.Product)
-                    .Include(x => x.Amount)
-                    .Where(x => x.OrderId == order.Id).ToListAsync();
-
-                var temp_order = new Order
-                {
-                    Customer = new Customer { FirstName = order.Customer.FirstName, LastName = order.Customer.LastName, Id = order.CustomerId },
-                    Location = new Location { Name = order.Location.Name },
-                    Time = order.Time,
-                    Id = order.Id,
-                };
-                foreach (var item in orderItems)
                 {
                     temp_order.Items.Add(new Product { Name = item.Product.Name, Price = item.Product.Price, Id = item.Product.Id }, item.Amount);
                 }

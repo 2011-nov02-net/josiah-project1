@@ -1,14 +1,13 @@
 ﻿@model StoreApp.WebApp.Models.CustomerViewModel
 
 @{
-    ViewData["Title"] = "OrderHistory";
+    ViewData["Title"] = "Orders";
     var orders = (List<OrderViewModel>)ViewData["Orders"];
 }
 
-<h1>OrderHistory</h1>
+<h1>Order History</h1>
 
 <div>
-    <h4>CustomerViewModel</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -35,10 +34,20 @@
     @foreach (var order in orders)
     {
         @order.Location.Name;
-        @order.Items
-    }
+        @:  ||  
+        @order.Time
+        @foreach (var item in order.Items)
+        {
+            @: ||
+            @:Product:
+            @(item.Key.Name)
+            @:  -  Quantity:
+            @(item.Value)
+        }
+        @: || Total:
+      @string.Format("{0:C2}", order.Price)
+     }
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Customers</a>
 </div>

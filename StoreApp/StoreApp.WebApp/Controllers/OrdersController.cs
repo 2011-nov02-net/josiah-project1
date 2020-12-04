@@ -53,14 +53,22 @@ namespace StoreApp.WebApp.Controllers
                 Price = x.Price
             }).ToList();
 
+            TempData["ProductsList"] = new List<string>();
+
             ViewData["Customers"] = customers;
             ViewData["Locations"] = locations;
-            ViewData["Products"] = products;
 
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(OrderViewModel viewModel)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Orders(AddProductsModel addProductModel)
         {
             return View();
         }

@@ -70,16 +70,6 @@ namespace StoreApp.WebApp.Controllers
 
             Dictionary<Order, double> prices = new Dictionary<Order, double>();
 
-            foreach (var order in data)
-            {
-                double price = 0;
-                foreach (var item in order.Items)
-                {
-                    price += (double)item.Key.Price * item.Value;
-                }
-                prices.Add(order, price);
-            }
-
             var orders = data.Select(x => new OrderViewModel
             {
                 Id = x.Id,
@@ -87,7 +77,7 @@ namespace StoreApp.WebApp.Controllers
                 Customer = x.Customer,
                 Time = x.Time,
                 Items = x.Items,
-                Price = prices[x]
+                Price = OrderViewModel.getPrice(x.Items)
             }).ToList();
 
             ViewData["Orders"] = orders;

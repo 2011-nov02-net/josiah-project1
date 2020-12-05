@@ -1,15 +1,14 @@
-﻿@model StoreApp.WebApp.Models.OrderViewModel
+﻿@model StoreApp.WebApp.Models.PlaceOrderViewModel
 
 @{
     ViewData["Title"] = "Create";
-    var customers = (List<CustomerViewModel>)ViewData["Customers"];
-    var locations = (List<LocationViewModel>)ViewData["Locations"];
-    var products = (List<ProductViewModel>)ViewData["Products"];
+    var customers = Model.Customers;
+    var locations = Model.Locations;
+    var products = Model.Products;
 }
 
 <h1>Create</h1>
 
-<h4>OrderViewModel</h4>
 <hr/>
 <div class="row">
     <div class="col-md-4">
@@ -18,30 +17,72 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <select id="CustomerList">
+                <select asp-for="chosenCustomerId" id="CustomerList">
                     <option style="display:none">-- select customer --</option>
                     @foreach (var customer in customers)
                     {
-                        @:<option Value=@customer.Id> @(customer.FirstName + " " + customer.LastName) </option>
+                        if (customer.Id == Model.chosenCustomerId)
+                        {
+                            @:<option Value=@customer.Id selected> @(customer.FirstName + " " + customer.LastName) </option>
+                        }
+                        else
+                        {
+                            @:<option Value=@customer.Id> @(customer.FirstName + " " + customer.LastName) </option>
+                        }
                     }
                 </select>
             </div>
 
             <div class="form-group">
-                <select id="LocationList">
+                <select asp-for="chosenLocationId" id="LocationList">
                     <option style="display:none">-- select location --</option>
                     @foreach (var location in locations)
                     {
-                        @:<option Value=@location.Id> @location.Name </option>
+                        if (location.Id == Model.chosenLocationId)
+                        {
+                            @:<option Value=@location.Id selected> @location.Name </option>
+                        }
+                        else
+                        {
+                            @:<option Value=@location.Id> @location.Name </option>
+                        }
                     }
                 </select>
             </div>
+
             <div>
-                <input type ="submit" value="Add Product" asp-action="Product" class="btn btn-primary" />
+                @if (Model.Cart.Count == 0)
+                {
+                    @:<text>Cart is empty</text>
+                }
+                else
+                {
+                    @foreach (var product in Model.Cart.Keys)
+                    {
+                        @:<text>@product - Count: @Model.Cart[product]</text>
+                    }
+                }
+
+            </div>
+
+            <div class="form-group">
+                <select asp-for="chosenProductId" id="ProductList">
+                    <option style="display:none">-- select product --</option>
+                    @foreach (var product in products)
+                    {
+                        @:<option Value=@product.Id> @product.Name - @string.Format("{0:C2}",product.Price) </option>
+                    }
+                </select>
+                <input asp-for="chosenProductAmount" class="form-control" />
+                <span asp-validation-for="chosenProductAmount" class="text-danger"></span>
+            </div>
+
+            <div>
+                <input type="submit" value="Add Product" asp-action="AddProduct" class="btn btn-primary" />
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Place Order" class="btn btn-primary" />
+                <input type="submit" value="Place Order" asp-action="Finalize" class="btn btn-primary" />
             </div>
         </form>
     </div>

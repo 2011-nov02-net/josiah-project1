@@ -64,18 +64,6 @@ namespace StoreApp.WebApp.Controllers
                 Inventory = location.Inventory
             };
 
-            Dictionary<Order, double> prices = new Dictionary<Order, double>();
-
-            foreach (var order in orders)
-            {
-                double price = 0;
-                foreach (var item in order.Items)
-                {
-                    price += (double)item.Key.Price * item.Value;
-                }
-                prices.Add(order, price);
-            }
-
             var viewOrders = orders.Select(x => new OrderViewModel
             {
                 Id = x.Id,
@@ -83,7 +71,7 @@ namespace StoreApp.WebApp.Controllers
                 Location = x.Location,
                 Time = x.Time,
                 Items = x.Items,
-                Price = prices[x]
+                Price = OrderViewModel.getPrice(x.Items)
             }).ToList();
 
             ViewData["Orders"] = viewOrders;

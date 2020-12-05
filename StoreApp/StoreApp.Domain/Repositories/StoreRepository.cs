@@ -132,7 +132,7 @@ namespace StoreApp.Domain.Repositories
         }
         public IEnumerable<Location> GetAllLocations()
         {
-            var locations = _context.Locations.Include(i => i.Inventory).ToList().Select(x => new Location
+            var locations = _context.Locations.Include(i => i.Inventory).ThenInclude(i => i.Product).ToList().Select(x => new Location
             {
                 Id = x.Id,
                 Name = x.Name
@@ -141,7 +141,7 @@ namespace StoreApp.Domain.Repositories
         }
         public async Task<IEnumerable<Location>> GetAllLocationsAsync()
         {
-            var data = await _context.Locations.Include(i => i.Inventory).ToListAsync();
+            var data = await _context.Locations.Include(i => i.Inventory).ThenInclude(i => i.Product).ToListAsync();
             var locations = data.Select(x => new Location
             {
                 Id = x.Id,

@@ -20,8 +20,8 @@ namespace StoreApp.Domain.Interfaces
         public Task AddLocationAsync(Location location);
         public IEnumerable<Location> GetAllLocations();
         public Task<IEnumerable<Location>> GetAllLocationsAsync();
-        public void AddInventoryToLocation(Location location, List<Product> items);
-        public Task AddInventoryToLocationAsync(Location location, List<Product> items);
+        public void AddInventoryToLocation(Location location, Dictionary<Product, int> items);
+        public Task AddInventoryToLocationAsync(Location location, Dictionary<Product, int> items);
         public Location GetLocationdDetails(int id);
         public Task<Location> GetLocationDetailsAsync(int id);
         public void AddOrder(Order order);

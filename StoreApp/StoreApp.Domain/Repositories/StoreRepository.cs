@@ -22,7 +22,15 @@ namespace StoreApp.Domain.Repositories
         }
         public void AddCustomer(Customer customer)
         {
-            throw new NotImplementedException();
+            var new_customer = new CustomerEntity
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email
+            };
+
+            _context.Customers.Add(new_customer);
+            _context.SaveChanges();
         }
         public async Task AddCustomerAsync(Customer customer)
         {
@@ -34,7 +42,7 @@ namespace StoreApp.Domain.Repositories
             };
 
             await _context.Customers.AddAsync(new_customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         public IEnumerable<Customer> GetAllCustomers()
         {
@@ -149,13 +157,65 @@ namespace StoreApp.Domain.Repositories
             });
             return locations;
         }
-        public void AddInventoryToLocation(Location location, List<Product> items)
+        public void AddInventoryToLocation(Location l, Dictionary<Product, int> items)
         {
-            throw new NotImplementedException();
-        } //TODO
-        public async Task AddInventoryToLocationAsync(Location location, List<Product> items)
+            var location = _context.Locations
+                    .Include(x => x.Inventory)
+                    .ThenInclude(x => x.Product)
+                    .Where(x => x.Id == l.Id).First();
+            var products = _context.Products.ToList();
+
+            foreach (var item in items.Keys)
+            {
+                if (!products.Any(x => x.Name == item.Name))
+                {
+                    AddProduct(item);
+                }
+                if (!location.Inventory.Any(x => x.ProductId == item.Id))
+                {
+                    // add new item with amount
+                    var result = (List<InventoryItemsEntity>)location.Inventory;
+                    result.Add(new InventoryItemsEntity { ProductId = item.Id, LocationId = location.Id, Amount = items[item] });
+                    location.Inventory = result;
+                }
+                else
+                {
+                    // increase amount of item
+                    location.Inventory.Where(x => x.ProductId == item.Id).First().Amount += items[item];
+                }
+            }
+            _context.SaveChanges();
+        }
+        public async Task AddInventoryToLocationAsync(Location l, Dictionary<Product, int> items)
         {
-            throw new NotImplementedException();
+            var location = await _context.Locations
+                .Include(x => x.Inventory)
+                .ThenInclude(x => x.Product)
+                .Where(x => x.Id == l.Id).FirstAsync();
+
+            var products = await _context.Products.ToListAsync();
+
+            foreach (var item in items.Keys)
+            {
+                if (!products.Any(x => x.Name == item.Name))
+                {
+                    await AddProductAsync(item);
+                }
+                if (!location.Inventory.Any(x => x.ProductId == item.Id))
+                {
+                    // add new item with amount
+                    var result = (List<InventoryItemsEntity>)location.Inventory;
+                    result.Add(new InventoryItemsEntity { ProductId = item.Id, LocationId = location.Id, Amount = items[item] });
+                    location.Inventory = result;
+                }
+                else
+                {
+                    // increase amount of item
+                    location.Inventory.Where(x => x.ProductId == item.Id).First().Amount += items[item];
+                }
+            }
+            await _context.SaveChangesAsync();
+
         } //TODO
         public Location GetLocationdDetails(int id)
         {
@@ -195,7 +255,43 @@ namespace StoreApp.Domain.Repositories
         }
         public void AddOrder(Order order)
         {
-            throw new NotImplementedException();
+            var new_order = new OrderEntity
+            {
+                Time = DateTime.Now,
+                CustomerId = order.Customer.Id,
+                LocationId = order.Location.Id
+            };
+            new_order = OrderItemsToEntity(order.Items, new_order);
+
+            // check if location inventories are adequate
+
+            var location = _context.Locations
+                .Include(x => x.Inventory)
+                .ThenInclude(x => x.Product)
+                .Where(x => x.Id == order.Location.Id).First();
+
+            foreach (var item in new_order.Items)
+            {
+                if (!(location.Inventory.Any(x => x.ProductId == item.ProductId)))
+                {
+                    throw new ApplicationException($"Location does not contain Product ID: {item.ProductId}");
+                }
+
+                var stock = location.Inventory.Where(x => x.Product.Id == item.ProductId).First().Amount;
+
+                if (stock < item.Amount)
+                {
+                    throw new ApplicationException($"Insufficient inventory to complete purchase - Product ID: {item.ProductId}");
+                }
+                else
+                {
+                    location.Inventory.Where(x => x.Product.Id == item.ProductId).First().Amount -= item.Amount;
+                }
+            }
+
+            _context.Orders.Add(new_order);
+
+            _context.SaveChanges();
         } //TODO
         public async Task AddOrderAsync(Order order)
         { 
@@ -234,7 +330,7 @@ namespace StoreApp.Domain.Repositories
 
             await _context.Orders.AddAsync(new_order);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         public IEnumerable<Order> GetAllOrders()
         {

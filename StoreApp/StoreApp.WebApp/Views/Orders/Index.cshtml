@@ -46,7 +46,7 @@
             <td>
                 @foreach (var product in item.Items)
                 {
-                    @:@(product.Value + " " + product.Key.Name + "(s)")  <br />
+                    @:@(product.Value + " " + product.Key.Name + "(s)") - @(string.Format("{0:C2}", (product.Key.Price*product.Value)))<br />
                 }
             </td>
                 

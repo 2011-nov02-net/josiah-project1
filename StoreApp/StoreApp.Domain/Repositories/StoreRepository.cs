@@ -174,7 +174,7 @@ namespace StoreApp.Domain.Repositories
                 if (!location.Inventory.Any(x => x.ProductId == item.Id))
                 {
                     // add new item with amount
-                    var result = (List<InventoryItemsEntity>)location.Inventory;
+                    var result = new List<InventoryItemsEntity>(location.Inventory);
                     result.Add(new InventoryItemsEntity { ProductId = item.Id, LocationId = location.Id, Amount = items[item] });
                     location.Inventory = result;
                 }

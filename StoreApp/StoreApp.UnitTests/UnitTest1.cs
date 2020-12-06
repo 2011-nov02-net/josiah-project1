@@ -123,5 +123,64 @@ namespace StoreApp.UnitTests
                 .Single(l => l.Customer.FirstName == "John");
             Assert.Equal(OrderActual.Items.Count(), 1);
         }
+        [Fact]
+        public void AddLocation_Database_Test()
+        {
+            // arrange
+            using var connection = new SqliteConnection("Data Source=:memory:");
+            connection.Open();
+            var options = new DbContextOptionsBuilder<StoreAppDbContext>().UseSqlite(connection).Options;
+            var location = new Location
+            {
+                Id = 1,
+                Name = "Walmart"
+            };
+
+            // act
+            using (var context = new StoreAppDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var repo = new StoreRepository(context, new NullLogger<StoreRepository>());
+
+                repo.AddLocation(location);
+            }
+            //assert
+            using var context2 = new StoreAppDbContext(options);
+            LocationEntity customerActual = context2.Locations
+                .Single(l => l.Name == "Walmart");
+            Assert.Equal(location.Name, customerActual.Name);
+        }
+        [Fact]
+        public void AddProduct_Database_test()
+        {
+            // arrange
+            using var connection = new SqliteConnection("Data Source=:memory:");
+            connection.Open();
+            var options = new DbContextOptionsBuilder<StoreAppDbContext>().UseSqlite(connection).Options;
+            var product = new Product
+            {
+                Id = 1,
+                Name = "Walmart",
+                Price = 5
+            };
+
+            // act
+            using (var context = new StoreAppDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var repo = new StoreRepository(context, new NullLogger<StoreRepository>());
+
+                repo.AddProduct(product);
+            }
+            //assert
+            using var context2 = new StoreAppDbContext(options);
+            ProductEntity productActual = context2.Products
+                .Single(l => l.Name == "Walmart");
+            Assert.Equal(product.Name, productActual.Name);
+        }
+
+
+
     }
+
 }

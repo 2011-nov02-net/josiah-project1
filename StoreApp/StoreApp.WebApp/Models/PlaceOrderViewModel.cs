@@ -16,7 +16,7 @@ namespace StoreApp.WebApp.Models
             CartAmounts = new List<int>();
         }
         public bool New { get; set; }
-        [Range(0, 99)]
+        [Range(1, 99, ErrorMessage = "Enter a value between 1 and 99")]
         public int chosenProductAmount { get; set; }
         public Customer Customer { get; set; }
         public Location Location { get; set; }

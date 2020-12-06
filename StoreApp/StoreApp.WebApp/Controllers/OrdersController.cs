@@ -74,11 +74,9 @@ namespace StoreApp.WebApp.Controllers
             return View(viewModel);
         }
 
+        [ValidateAntiForgeryToken]
         public IActionResult AddProduct(PlaceOrderViewModel viewModel)
         {
-            // TODO: validate chosen product with chosen location id.
-            // if not valid, return normal viewModel with an error message or something
-            // if valid, add items to the cart
 
             try
             {
@@ -112,16 +110,15 @@ namespace StoreApp.WebApp.Controllers
                 }
                 else
                 {
-                    throw new ApplicationException("done goofed");
+                    return RedirectToAction(nameof(Create), viewModel);
                 }
             }
-            catch
+            catch (Exception e)
             {
                 return RedirectToAction(nameof(Create), viewModel);
             }
-
-
         }
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Finalize(PlaceOrderViewModel viewModel)
         {
             // TODO: validate final chosen product with the chosen location id.

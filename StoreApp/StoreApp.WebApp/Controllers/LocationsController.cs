@@ -30,6 +30,7 @@ namespace StoreApp.WebApp.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LocationViewModel viewModel)
         {
             try

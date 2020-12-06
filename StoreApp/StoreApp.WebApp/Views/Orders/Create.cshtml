@@ -5,6 +5,7 @@
     var customers = Model.Customers;
     var locations = Model.Locations;
     var products = Model.Products;
+    Model.chosenProductAmount = 1;
 
 
     TempData.Put("Model", Model);
@@ -81,7 +82,7 @@
                     }
                 </select>
                 <input asp-for="chosenProductAmount" class="form-control" />
-                <!--<span asp-validation-for="chosenProductAmount" class="text-danger"></span>-->
+                <span asp-validation-for="chosenProductAmount" class="text-danger"></span>
             </div>
 
             <div>

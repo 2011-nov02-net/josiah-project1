@@ -28,5 +28,8 @@ namespace StoreApp.UnitTests
             };
             Assert.True(product.Name == "Pop Rocks" && product.Price == 3);
         }
+
+
+
     }
 }

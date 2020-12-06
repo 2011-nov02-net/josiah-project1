@@ -201,35 +201,33 @@ namespace StoreApp.Domain.Repositories
         { 
             var new_order = new OrderEntity
             {
-
-                Time = DateTime.Now
+                Time = DateTime.Now,
+                CustomerId = order.Customer.Id,
+                LocationId = order.Location.Id
             };
-            new_order.CustomerId = order.Customer.Id;
-            new_order.LocationId = order.Location.Id;
             new_order = OrderItemsToEntity(order.Items, new_order);
 
             // check if location inventories are adequate
 
-            var locationDetails = GetLocationdDetails(order.Location.Id);
+            var location = await _context.Locations
+                .Include(x => x.Inventory)
+                .ThenInclude(x => x.Product)
+                .Where(x => x.Id == order.Location.Id).FirstAsync();
 
             foreach (var item in new_order.Items)
             {
-                if (!(locationDetails.Inventory.Keys.Any(x => x.Id == item.Id))){
-                    throw new ApplicationException($"Location does not contain: {item.Product.Name}");
+                if (!(location.Inventory.Any(x => x.ProductId == item.ProductId))){
+                    throw new ApplicationException($"Location does not contain Product ID: {item.ProductId}");
                 }
-                var key = locationDetails.Inventory.Keys.Where(x => x.Id == item.Id).First();
-                var stock = locationDetails.Inventory[key];
+
+                var stock = location.Inventory.Where(x => x.Product.Id == item.ProductId).First().Amount;
 
                 if (stock < item.Amount)
                 {
-                    throw new ApplicationException("Insufficient inventory to complete purchase");
+                    throw new ApplicationException($"Insufficient inventory to complete purchase - Product ID: {item.ProductId}");
                 }
                 else
                 {
-                    var location = await _context.Locations
-                        .Include(x => x.Inventory)
-                        .ThenInclude(x => x.Product)
-                        .Where(x => x.Id == locationDetails.Id).FirstAsync();
                     location.Inventory.Where(x => x.Product.Id == item.ProductId).First().Amount -= item.Amount;
                 }
             }

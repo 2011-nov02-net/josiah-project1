@@ -78,5 +78,18 @@ namespace StoreApp.WebApp.Controllers
 
             return View(viewLocation);
         }
+        public async Task<IActionResult> Inventory(int id)
+        {
+            var location = await repo.GetLocationDetailsAsync(id);
+
+            var viewLocation = new LocationViewModel
+            {
+                Name = location.Name,
+                Id = location.Id,
+                Inventory = location.Inventory
+            };
+
+            return View(viewLocation);
+        }
     }
 }

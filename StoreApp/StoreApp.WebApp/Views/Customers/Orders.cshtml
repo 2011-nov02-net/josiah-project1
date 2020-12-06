@@ -5,49 +5,50 @@
     var orders = (List<OrderViewModel>)ViewData["Orders"];
 }
 
-<h1>Order History</h1>
+<h1>@Model.FirstName @Model.LastName Orders</h1>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-    </dl>
-</div>
-<div>
-    @foreach (var order in orders)
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Location
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Items
+            </th>
+            <th>
+                Total
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    @foreach (var item in orders)
     {
-        @order.Location.Name;
-        @:  ||  
-        @order.Time
-        @foreach (var item in order.Items)
-        {
-            @: ||
-            @:Product:
-            @(item.Key.Name)
-            @:  -  Quantity:
-            @(item.Value)
-        }
-        @: || Total:
-      @string.Format("{0:C2}", order.Price)
-     }
-</div>
+        <tr>
+            <td>
+                @item.Location.Name
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @foreach (var product in item.Items)
+                {
+                    @:@(product.Value + " " + product.Key.Name + "(s)")<br />
+                }
+            </td>
+
+            <td>
+                @string.Format("{0:C2}", OrderViewModel.getPrice(item.Items))
+            </td>
+        </tr>
+    }
+</table>
+
 <div>
     <a asp-action="Index">Back to Customers</a>
 </div>

@@ -1,0 +1,36 @@
+﻿@model StoreApp.WebApp.Models.LocationViewModel
+
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<h1>@Model.Name Inventory</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Amount
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Inventory)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Key.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index">Back to locations</a>
+</div>

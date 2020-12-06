@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Orders Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -46,7 +46,7 @@
             <td>
                 @foreach (var product in item.Items)
                 {
-                    @:@(product.Key.Name + ": " +  product.Value) ||  
+                    @:@(product.Value + " " + product.Key.Name + "(s)")  <br />
                 }
             </td>
                 

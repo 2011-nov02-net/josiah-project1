@@ -238,7 +238,6 @@ namespace StoreApp.Domain.Repositories
 
             _context.SaveChanges();
         }
-
         public IEnumerable<Order> GetAllOrders()
         {
             var orders = _context.Orders

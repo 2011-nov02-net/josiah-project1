@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
+using StoreApp.WebApp.Helpers;
 using StoreApp.WebApp.Models;
 
 namespace StoreApp.WebApp.Controllers
@@ -65,11 +66,14 @@ namespace StoreApp.WebApp.Controllers
                 viewModel.Products = products;
                 viewModel.New = false;
             }
+            else
+            {
+                viewModel = TempData.Get<PlaceOrderViewModel>("Model");
+            }
 
             return View(viewModel);
         }
 
-        [HttpPost]
         public IActionResult AddProduct(PlaceOrderViewModel viewModel)
         {
             // TODO: validate chosen product with chosen location id.
@@ -80,14 +84,29 @@ namespace StoreApp.WebApp.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var product = viewModel.Products.Where(x => x.Id == viewModel.chosenProductId).First();
+                    var chosenProduct = viewModel.chosenProductId;
+                    var chosenCustomer = viewModel.chosenCustomerId;
+                    var chosenLocation = viewModel.chosenLocationId;
+                    var chosenProductAmount = viewModel.chosenProductAmount;
+
+                    viewModel = TempData.Get<PlaceOrderViewModel>("Model");
+
+                    var product = viewModel.Products.Where(x => x.Id == chosenProduct).First();
                     var new_product = new Product
                     {
                         Id = product.Id,
                         Name = product.Name,
                         Price = product.Price
                     };
-                    viewModel.Cart.Add(product, viewModel.chosenProductAmount);
+
+                    viewModel.CartItems.Add(product);
+                    viewModel.CartAmounts.Add(chosenProductAmount);
+                    viewModel.chosenProductAmount = chosenProductAmount;
+                    viewModel.chosenProductId = chosenProduct;
+                    viewModel.chosenLocationId = chosenLocation;
+                    viewModel.chosenCustomerId = chosenCustomer;
+
+                    TempData.Put("Model", viewModel);
 
                     return RedirectToAction(nameof(Create), viewModel);
                 }
@@ -110,7 +129,41 @@ namespace StoreApp.WebApp.Controllers
             // if valid, add final product to cart and create an order
 
 
-            throw new NotImplementedException();
+            try
+            {
+                //var chosenProduct = viewModel.chosenProductId;
+                var chosenCustomer = viewModel.chosenCustomerId;
+                var chosenLocation = viewModel.chosenLocationId;
+                //var chosenProductAmount = viewModel.chosenProductAmount;
+
+                viewModel = TempData.Get<PlaceOrderViewModel>("Model");
+
+                //var product = viewModel.Products.Where(x => x.Id == chosenProduct).First();
+                //var new_product = new Product
+                //{
+                //    Id = product.Id,
+                //    Name = product.Name,
+                //    Price = product.Price
+                //};
+
+                //viewModel.CartItems.Add(product);
+                //viewModel.CartAmounts.Add(chosenProductAmount);
+                //viewModel.chosenProductId = chosenProduct;
+                viewModel.chosenLocationId = chosenLocation;
+                viewModel.chosenCustomerId = chosenCustomer;
+
+                viewModel.Customer = viewModel.Customers.Where(x => x.Id == chosenCustomer).First();
+                viewModel.Location = viewModel.Locations.Where(x => x.Id == chosenLocation).First();
+
+                await repo.AddOrderAsync(OrderHelper.ViewToOrder(viewModel));
+
+                return RedirectToAction(nameof(Create), viewModel);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
         }
     }
 }

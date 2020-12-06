@@ -12,11 +12,14 @@ namespace StoreApp.WebApp.Models
         public PlaceOrderViewModel()
         {
             New = true;
-            Cart = new Dictionary<Product, int>();
+            CartItems = new List<Product>();
+            CartAmounts = new List<int>();
         }
         public bool New { get; set; }
         [Range(0, 99)]
         public int chosenProductAmount { get; set; }
+        public Customer Customer { get; set; }
+        public Location Location { get; set; }
         public IEnumerable<Customer> Customers { get; set; }
         public int chosenCustomerId { get; set; }
         public IEnumerable<Location> Locations { get; set; }
@@ -24,6 +27,7 @@ namespace StoreApp.WebApp.Models
         public IEnumerable<Product> Products { get; set; }
         public int chosenProductId { get; set; }
         public IDictionary<Product, int> Inventory { get; set; }
-        public IDictionary<Product, int> Cart { get; set; }
+        public List<Product> CartItems { get; set; }
+        public List<int> CartAmounts { get; set; }
     }
 }

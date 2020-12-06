@@ -5,6 +5,9 @@
     var customers = Model.Customers;
     var locations = Model.Locations;
     var products = Model.Products;
+
+
+    TempData.Put("Model", Model);
 }
 
 <h1>Create</h1>
@@ -51,30 +54,34 @@
             </div>
 
             <div>
-                @if (Model.Cart.Count == 0)
+                @if (Model.CartItems.Count() == 0)
                 {
                     @:<text>Cart is empty</text>
                 }
                 else
                 {
-                    @foreach (var product in Model.Cart.Keys)
+                    @:<text>Cart Items</text>
+                    @:<br />
+                    @for (int i = 0; i < Model.CartItems.Count(); i++)
                     {
-                        @:<text>@product - Count: @Model.Cart[product]</text>
+                        @:<text>@Model.CartItems[i].Name - Count: @Model.CartAmounts[i]</text>
+                        @:<br />
                     }
+                    <br />
                 }
 
             </div>
 
             <div class="form-group">
-                <select asp-for="chosenProductId" id="ProductList">
+                <select id="ProductList" asp-for="chosenProductId">
                     <option style="display:none">-- select product --</option>
                     @foreach (var product in products)
                     {
-                        @:<option Value=@product.Id> @product.Name - @string.Format("{0:C2}",product.Price) </option>
+                        @:<option Value=@product.Id> @product.Name - @string.Format("{0:C2}", product.Price) </option>
                     }
                 </select>
                 <input asp-for="chosenProductAmount" class="form-control" />
-                <span asp-validation-for="chosenProductAmount" class="text-danger"></span>
+                <!--<span asp-validation-for="chosenProductAmount" class="text-danger"></span>-->
             </div>
 
             <div>

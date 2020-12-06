@@ -196,10 +196,42 @@ namespace StoreApp.Domain.Repositories
         {
             throw new NotImplementedException();
         } //TODO
-        public Task AddOrderAsync(Order order)
-        {
-            throw new NotImplementedException();
-        } //TODO
+        public async Task AddOrderAsync(Order order)
+        { 
+            var new_order = new OrderEntity
+            {
+                Customer = CustomerToEntity(order.Customer),
+                Location = LocationToEntity(order.Location),
+                Time = DateTime.Now
+            };
+            new_order = OrderItemsToEntity(order.Items, new_order);
+
+            // check if location inventories are adequate
+
+            var locationDetails = GetLocationdDetails(new_order.Location.Id);
+
+            foreach (var item in new_order.Items)
+            {
+                if (!(locationDetails.Inventory.Keys.Any(x => x.Id == item.Id))){
+                    throw new ApplicationException($"Location does not contain: {item.Product.Name}");
+                }
+                var key = locationDetails.Inventory.Keys.Where(x => x.Id == item.Id).First();
+                var stock = locationDetails.Inventory[key];
+
+                if (stock < item.Amount)
+                {
+                    throw new ApplicationException("Insufficient inventory to complete purchase");
+                }
+                else
+                {
+                    new_order.Location.Inventory.Where(x => x.Product.Id == item.Id).First().Amount -= item.Amount;
+                }
+            }
+
+            await _context.Orders.AddAsync(new_order);
+            _context.SaveChanges();
+        }
+
         public IEnumerable<Order> GetAllOrders()
         {
             var orders = _context.Orders
@@ -316,6 +348,50 @@ namespace StoreApp.Domain.Repositories
                 Price = x.Price
             });
             return products;
+        }
+        public LocationEntity LocationToEntity(Location location)
+        {
+            var result = new LocationEntity
+            {
+                Name = location.Name,
+                Id = location.Id
+            };
+            return result;
+        }
+        public CustomerEntity CustomerToEntity(Customer customer)
+        {
+            var result = new CustomerEntity
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                Id = customer.Id
+            };
+            return result;
+        }
+        public ProductEntity ProductToEntity(Product product)
+        {
+            var result = new ProductEntity
+            {
+                Name = product.Name,
+                Price = product.Price,
+            };
+            return result;
+        }
+        public OrderEntity OrderItemsToEntity(IDictionary<Product, int> items, OrderEntity order)
+        {
+            List<OrderItemsEntity> result = new List<OrderItemsEntity>();
+            foreach (var item in items.Keys)
+            {
+                result.Add(new OrderItemsEntity
+                {
+                    Product = ProductToEntity(item),
+                    Order = order,
+                    Amount = items[item]
+                });
+            }
+            order.Items = result;
+            return order;
         }
     }
 }

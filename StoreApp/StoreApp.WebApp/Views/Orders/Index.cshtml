@@ -13,11 +13,21 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                Customer
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Time)
+                Location
             </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Items
+            </th>
+            <th>
+                Total
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -25,16 +35,30 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @item.Customer.FirstName @item.Customer.LastName
+            </td>
+            <td>
+                @item.Location.Name
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Time)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @foreach (var product in item.Items)
+                {
+                    @:@(product.Key.Name + ": " +  product.Value) ||  
+                }
             </td>
+                
+            <td>
+                @string.Format("{0:C2}", OrderViewModel.getPrice(item.Items))
+            </td>
+            <!--
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+    </td>-->
         </tr>
 }
     </tbody>

@@ -66,7 +66,7 @@ namespace StoreApp.UnitTests
                 .Single(l => l.FirstName == "Jerry");
             Assert.Equal(customer.FirstName, customerActual.FirstName);
         }
-
+        /*
         [Fact]
         public void AddOrder_Success_Database_test()
         {
@@ -122,7 +122,7 @@ namespace StoreApp.UnitTests
                 .Include(x => x.Customer)
                 .Single(l => l.Customer.FirstName == "John");
             Assert.Equal(OrderActual.Items.Count(), 1);
-        }
+        }*/
         [Fact]
         public void AddLocation_Database_Test()
         {

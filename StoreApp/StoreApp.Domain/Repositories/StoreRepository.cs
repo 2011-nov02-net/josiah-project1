@@ -165,6 +165,7 @@ namespace StoreApp.Domain.Repositories
                 .Where(x => x.Id == id).First();
             var result = new Location
             {
+                Id = location.Id,
                 Name = location.Name
             };
 
@@ -200,15 +201,16 @@ namespace StoreApp.Domain.Repositories
         { 
             var new_order = new OrderEntity
             {
-                Customer = CustomerToEntity(order.Customer),
-                Location = LocationToEntity(order.Location),
+
                 Time = DateTime.Now
             };
+            new_order.CustomerId = order.Customer.Id;
+            new_order.LocationId = order.Location.Id;
             new_order = OrderItemsToEntity(order.Items, new_order);
 
             // check if location inventories are adequate
 
-            var locationDetails = GetLocationdDetails(new_order.Location.Id);
+            var locationDetails = GetLocationdDetails(order.Location.Id);
 
             foreach (var item in new_order.Items)
             {
@@ -224,11 +226,16 @@ namespace StoreApp.Domain.Repositories
                 }
                 else
                 {
-                    new_order.Location.Inventory.Where(x => x.Product.Id == item.Id).First().Amount -= item.Amount;
+                    var location = await _context.Locations
+                        .Include(x => x.Inventory)
+                        .ThenInclude(x => x.Product)
+                        .Where(x => x.Id == locationDetails.Id).FirstAsync();
+                    location.Inventory.Where(x => x.Product.Id == item.ProductId).First().Amount -= item.Amount;
                 }
             }
 
             await _context.Orders.AddAsync(new_order);
+
             _context.SaveChanges();
         }
 
@@ -373,6 +380,7 @@ namespace StoreApp.Domain.Repositories
         {
             var result = new ProductEntity
             {
+                Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
             };
@@ -385,7 +393,7 @@ namespace StoreApp.Domain.Repositories
             {
                 result.Add(new OrderItemsEntity
                 {
-                    Product = ProductToEntity(item),
+                    ProductId = item.Id,
                     Order = order,
                     Amount = items[item]
                 });

@@ -129,7 +129,7 @@ namespace StoreApp.WebApp.Controllers
             // if valid, add final product to cart and create an order
 
 
-            try
+            //try
             {
                 //var chosenProduct = viewModel.chosenProductId;
                 var chosenCustomer = viewModel.chosenCustomerId;
@@ -157,12 +157,12 @@ namespace StoreApp.WebApp.Controllers
 
                 await repo.AddOrderAsync(OrderHelper.ViewToOrder(viewModel));
 
-                return RedirectToAction(nameof(Create), viewModel);
-            }
-            catch
-            {
                 return RedirectToAction(nameof(Index));
             }
+            //catch
+            //{
+            //    return RedirectToAction(nameof(Index));
+            //}
 
         }
     }

@@ -35,9 +35,9 @@ namespace StoreApp.Domain.Repositories
                 LastName = customer.LastName,
                 Email = customer.Email
             };
-
             _context.Customers.Add(new_customer);
             _context.SaveChanges();
+            _logger.LogInformation($"Added Customer {customer.FirstName} {customer.LastName} to the database");
         }
         public async Task AddCustomerAsync(Customer customer)
         {
@@ -50,6 +50,8 @@ namespace StoreApp.Domain.Repositories
 
             await _context.Customers.AddAsync(new_customer);
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Added Customer {customer.FirstName} {customer.LastName} to the database");
+
         }
         /// <summary>
         /// returns a list of all customers
@@ -57,13 +59,14 @@ namespace StoreApp.Domain.Repositories
         /// <returns></returns>
         public IEnumerable<Customer> GetAllCustomers()
         {
-            var customers = _context.Customers.ToList().Select(x => new Customer
+            var customers = _context.Customers.Select(x => new Customer
             {
                 Id = x.Id,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email
-            });
+            }).ToList();
+            _logger.LogInformation("Retrieved list of all customers");
             return customers;
         }
         public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
@@ -76,6 +79,7 @@ namespace StoreApp.Domain.Repositories
                 LastName = x.LastName,
                 Email = x.Email
             });
+            _logger.LogInformation("Retrieved list of all customers");
             return customers;
         }
         /// <summary>
@@ -94,6 +98,7 @@ namespace StoreApp.Domain.Repositories
                     LastName = y.LastName,
                     Email = y.Email
                 });
+            _logger.LogInformation($"Returned {customers.Count()} customer(s) from search");
             return customers;
         }
         public async Task<IEnumerable<Customer>> SearchCustomersAsync(string search)
@@ -108,6 +113,7 @@ namespace StoreApp.Domain.Repositories
                     LastName = y.LastName,
                     Email = y.Email
                 });
+            _logger.LogInformation($"Returned {customers.Count()} customer(s) from search");
             return customers;
         }
         /// <summary>
@@ -125,6 +131,7 @@ namespace StoreApp.Domain.Repositories
                 LastName = data.LastName,
                 Email = data.Email
             };
+            _logger.LogInformation($"returned customer for ID#: {id}");
             return customer;
         }
         public async Task<Customer> GetCustomerByIdAsync(int id)
@@ -137,6 +144,7 @@ namespace StoreApp.Domain.Repositories
                 LastName = data.LastName,
                 Email = data.Email
             };
+            _logger.LogInformation($"returned customer for ID#: {id}");
             return customer;
         }
         /// <summary>
@@ -174,6 +182,7 @@ namespace StoreApp.Domain.Repositories
                 Id = x.Id,
                 Name = x.Name
             });
+            _logger.LogInformation("Returned all locations from database");
             return locations;
         }
         public async Task<IEnumerable<Location>> GetAllLocationsAsync()
@@ -184,6 +193,7 @@ namespace StoreApp.Domain.Repositories
                 Id = x.Id,
                 Name = x.Name
             });
+            _logger.LogInformation("Returned all locations from database");
             return locations;
         }
         /// <summary>
@@ -272,6 +282,7 @@ namespace StoreApp.Domain.Repositories
             {
                 result.Inventory.Add(new Product { Name = item.Product.Name, Price = item.Product.Price }, item.Amount);
             }
+            _logger.LogInformation($"Returned location details for location ID#: {id}");
             return result;
         }
         public async Task<Location> GetLocationDetailsAsync(int id)
@@ -290,6 +301,7 @@ namespace StoreApp.Domain.Repositories
             {
                 result.Inventory.Add(new Product { Name = item.Product.Name, Price = item.Product.Price }, item.Amount);
             }
+            _logger.LogInformation($"Returned location details for location ID#: {id}");
             return result;
         }
         /// <summary>
@@ -336,7 +348,9 @@ namespace StoreApp.Domain.Repositories
             _context.Orders.Add(new_order);
 
             _context.SaveChanges();
-        } //TODO
+            _logger.LogInformation($"Added order for {order.Customer.FirstName} {order.Customer.LastName} at {order.Location.Name} " +
+                $"for {order.Items.Count()} item(s)");
+        }
         public async Task AddOrderAsync(Order order)
         {
             var new_order = new OrderEntity
@@ -376,6 +390,8 @@ namespace StoreApp.Domain.Repositories
             await _context.Orders.AddAsync(new_order);
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation($"Added order for {order.Customer.FirstName} {order.Customer.LastName} at {order.Location.Name} " +
+                  $"for {order.Items.Count()} item(s)");
         }
         /// <summary>
         /// returns a list of all orders in the database
@@ -387,6 +403,7 @@ namespace StoreApp.Domain.Repositories
                 .Include(x => x.Location)
                 .Include(x => x.Customer)
                 .Include(x => x.Items).ThenInclude(x => x.Product).ToList();
+            _logger.LogInformation("returned list of all orders from database");
             return GetOrdersHelper(orders);
         }
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
@@ -395,6 +412,7 @@ namespace StoreApp.Domain.Repositories
                 .Include(x => x.Location)
                 .Include(x => x.Customer)
                 .Include(x => x.Items).ThenInclude(x => x.Product).ToListAsync();
+            _logger.LogInformation("returned list of all orders from database");
             return GetOrdersHelper(orders);
         }
         /// <summary>
@@ -409,6 +427,7 @@ namespace StoreApp.Domain.Repositories
                 .Include(x => x.Customer)
                 .Include(x => x.Items).ThenInclude(x => x.Product)
                 .Where(x => x.CustomerId == id).ToList();
+            _logger.LogInformation($"Retrieved all orders for customer ID#: {id}");
             return GetOrdersHelper(orders);
         }
         public async Task<IEnumerable<Order>> GetOrdersByCustomerAsync(int id)
@@ -418,7 +437,7 @@ namespace StoreApp.Domain.Repositories
                 .Include(x => x.Customer)
                 .Include(x => x.Items).ThenInclude(x => x.Product)
                 .Where(x => x.CustomerId == id).ToListAsync();
-
+            _logger.LogInformation($"Retrieved all orders for customer ID#: {id}");
             return GetOrdersHelper(orders);
         }
         /// <summary>
@@ -433,6 +452,7 @@ namespace StoreApp.Domain.Repositories
                 .Include(x => x.Customer)
                 .Include(x => x.Items).ThenInclude(x => x.Product)
                 .Where(x => x.LocationId == id).ToList();
+            _logger.LogInformation($"Retrieved all orders for location ID#: {id}");
             return GetOrdersHelper(orders);
         }
         public async Task<IEnumerable<Order>> GetOrdersByLocationAsync(int id)
@@ -442,6 +462,7 @@ namespace StoreApp.Domain.Repositories
                 .Include(x => x.Customer)
                 .Include(x => x.Items).ThenInclude(x => x.Product)
                 .Where(x => x.LocationId == id).ToListAsync();
+            _logger.LogInformation($"Retrieved all orders for location ID#: {id}");
             return GetOrdersHelper(orders);
         }
         /// <summary>
@@ -481,7 +502,7 @@ namespace StoreApp.Domain.Repositories
                 Name = product.Name,
                 Price = product.Price
             };
-
+            _logger.LogInformation($"Added product {product.Name} to database");
             _context.Products.Add(new_product);
             _context.SaveChanges();
         }
@@ -492,7 +513,7 @@ namespace StoreApp.Domain.Repositories
                 Name = product.Name,
                 Price = product.Price
             };
-
+            _logger.LogInformation($"Added product {product.Name} to database");
             await _context.Products.AddAsync(new_product);
             _context.SaveChanges();
         }

@@ -137,12 +137,8 @@ namespace StoreApp.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Finalize(PlaceOrderViewModel viewModel)
         {
-            // TODO: validate final chosen product with the chosen location id.
-            // if not valid, return viewmodel to create view with error message
-            // if valid, add final product to cart and create an order
 
-
-            //try
+            try
             {
                 //var chosenProduct = viewModel.chosenProductId;
                 var chosenCustomer = viewModel.chosenCustomerId;
@@ -172,10 +168,11 @@ namespace StoreApp.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            //catch
-            //{
-            //    return RedirectToAction(nameof(Index));
-            //}
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return RedirectToAction(nameof(Index));
+            }
 
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using StoreApp.WebApp.Models;
@@ -11,8 +12,13 @@ namespace StoreApp.WebApp.Controllers
     public class LocationsController : Controller
     {
         private IStoreRepository repo { get; }
-        public LocationsController(IStoreRepository Repo) =>
+        private readonly ILogger<LocationsController> logger;
+
+        public LocationsController(IStoreRepository Repo, ILogger<LocationsController> Logger)
+        {
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
+            logger = Logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         /// <summary>
         /// lists all locations along with a link to view their orders and inventories
@@ -26,7 +32,7 @@ namespace StoreApp.WebApp.Controllers
                 Id = x.Id,
                 Name = x.Name
             }); ;
-
+            logger.LogInformation("Displaying all locations");
             return View(locations);
         }
         /// <summary>
@@ -96,6 +102,8 @@ namespace StoreApp.WebApp.Controllers
 
             ViewData["Orders"] = viewOrders;
 
+            logger.LogInformation($"Displaying all orders at {location.Name}");
+
             return View(viewLocation);
         }
 
@@ -114,6 +122,8 @@ namespace StoreApp.WebApp.Controllers
                 Id = location.Id,
                 Inventory = location.Inventory
             };
+
+            logger.LogInformation($"Displaying inventory for {location.Name}");
 
             return View(viewLocation);
         }

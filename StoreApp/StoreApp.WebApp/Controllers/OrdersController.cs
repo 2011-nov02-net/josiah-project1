@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using StoreApp.WebApp.Helpers;
@@ -12,9 +13,12 @@ namespace StoreApp.WebApp.Controllers
     public class OrdersController : Controller
     {
         private IStoreRepository repo { get; }
-        public OrdersController(IStoreRepository Repo)
+        private readonly ILogger<OrdersController> logger;
+
+        public OrdersController(IStoreRepository Repo, ILogger<OrdersController> Logger)
         {
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
+            logger = Logger ?? throw new ArgumentNullException(nameof(logger));
         }
         /// <summary>
         /// returns a view containing all orders with their details
@@ -31,6 +35,7 @@ namespace StoreApp.WebApp.Controllers
                 Items = x.Items,
                 Price = OrderViewModel.getPrice(x.Items)
             });
+            logger.LogInformation("Displaying all orders");
             return View(orders);
         }
         /// <summary>
@@ -76,7 +81,7 @@ namespace StoreApp.WebApp.Controllers
             {
                 viewModel = TempData.Get<PlaceOrderViewModel>("Model");
             }
-
+            logger.LogInformation("Displaying form to create an order");
             return View(viewModel);
         }
 
@@ -117,15 +122,18 @@ namespace StoreApp.WebApp.Controllers
 
                     TempData.Put("Model", viewModel);
 
+                    logger.LogInformation("Order form valid, adding item and redirecting to create order form");
                     return RedirectToAction(nameof(Create), viewModel);
                 }
                 else
                 {
+                    logger.LogInformation("Order form not valid, redirecting to create order form");
                     return RedirectToAction(nameof(Create), viewModel);
                 }
             }
             catch (Exception e)
             {
+                logger.LogInformation(e.Message);
                 return RedirectToAction(nameof(Create), viewModel);
             }
         }
@@ -166,11 +174,14 @@ namespace StoreApp.WebApp.Controllers
 
                 await repo.AddOrderAsync(OrderHelper.ViewToOrder(viewModel));
 
+                logger.LogInformation($"Order for Customer ID#: {chosenCustomer} at Location ID#: {chosenLocation}" +
+                    $"for {viewModel.CartAmounts.Count} item(s) placed");
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                logger.LogInformation(e.Message);
                 return RedirectToAction(nameof(Index));
             }
 

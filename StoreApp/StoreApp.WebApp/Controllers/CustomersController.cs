@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using StoreApp.WebApp.Models;
@@ -12,8 +13,13 @@ namespace StoreApp.WebApp.Controllers
     public class CustomersController : Controller
     {
         private IStoreRepository repo { get; }
-        public CustomersController(IStoreRepository Repo) =>
+        private readonly ILogger<CustomersController> logger;
+
+        public CustomersController(IStoreRepository Repo, ILogger<CustomersController> Logger)
+        {
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
+            logger = Logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         /// <summary>
         /// Index of all customers, contains a search box so you can filter through customer names
@@ -26,7 +32,7 @@ namespace StoreApp.WebApp.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 data = await repo.SearchCustomersAsync(searchString);
-                Console.WriteLine($"Searching for {searchString} in database");
+                logger.LogInformation($"Searching for {searchString} in database");
             }
             else
             {
@@ -59,6 +65,7 @@ namespace StoreApp.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerViewModel viewModel)
         {
+
             try
             {
                 if (ModelState.IsValid)
@@ -70,6 +77,8 @@ namespace StoreApp.WebApp.Controllers
                         Email = viewModel.Email
                     };
                     await repo.AddCustomerAsync(customer);
+
+                    logger.LogInformation($"Created new customer {customer.FirstName} {customer.LastName}");
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -112,6 +121,7 @@ namespace StoreApp.WebApp.Controllers
                 LastName = data2.LastName,
                 Email = data2.Email
             };
+            logger.LogInformation($"Displaying orders for {customer.FirstName} {customer.LastName}");
             return View(customer);
         }
 

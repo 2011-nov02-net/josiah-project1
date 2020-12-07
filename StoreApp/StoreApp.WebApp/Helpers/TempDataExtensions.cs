@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
+/// <summary>
+/// This class was taken in its entirety from stack overflow => 
+/// https://stackoverflow.com/questions/34638823/store-complex-object-in-tempdata
+/// </summary>
 public static class TempDataExtensions
 {
     public static void Put<T>(this ITempDataDictionary tempData, string key, T value) where T : class

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using StoreApp.WebApp.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StoreApp.WebApp.Controllers
 {

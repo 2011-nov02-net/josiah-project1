@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StoreApp.Data;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace StoreApp.Domain.Repositories
@@ -339,7 +338,7 @@ namespace StoreApp.Domain.Repositories
             _context.SaveChanges();
         } //TODO
         public async Task AddOrderAsync(Order order)
-        { 
+        {
             var new_order = new OrderEntity
             {
                 Time = DateTime.Now,
@@ -357,7 +356,8 @@ namespace StoreApp.Domain.Repositories
 
             foreach (var item in new_order.Items)
             {
-                if (!(location.Inventory.Any(x => x.ProductId == item.ProductId))){
+                if (!(location.Inventory.Any(x => x.ProductId == item.ProductId)))
+                {
                     throw new ApplicationException($"Location does not contain Product ID: {item.ProductId}");
                 }
 

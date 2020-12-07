@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using StoreApp.Domain.Interfaces;
 using StoreApp.Domain.Model;
 using StoreApp.WebApp.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StoreApp.WebApp.Controllers
 {
@@ -14,7 +14,7 @@ namespace StoreApp.WebApp.Controllers
         private IStoreRepository repo { get; }
         public CustomersController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
-        
+
         /// <summary>
         /// Index of all customers, contains a search box so you can filter through customer names
         /// </summary>
@@ -26,6 +26,7 @@ namespace StoreApp.WebApp.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 data = await repo.SearchCustomersAsync(searchString);
+                Console.WriteLine($"Searching for {searchString} in database");
             }
             else
             {

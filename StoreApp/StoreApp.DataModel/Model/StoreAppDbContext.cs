@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StoreApp.Data
 {
@@ -68,7 +65,7 @@ namespace StoreApp.Data
                     .HasForeignKey(k => k.CustomerId)
                     .HasConstraintName("FK_Customer_Order")
                     .IsRequired();
-                    
+
                 entity.HasOne(e => e.Location)
                     .WithMany(o => o.Orders)
                     .HasForeignKey(k => k.LocationId)

@@ -4,9 +4,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using StoreApp.Data;
 using StoreApp.Domain.Model;
 using StoreApp.Domain.Repositories;
-using StoreApp.WebApp;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 

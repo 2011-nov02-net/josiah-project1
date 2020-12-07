@@ -1,8 +1,6 @@
-﻿using System;
+﻿using StoreApp.Domain.Model;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using StoreApp.Domain.Model;
 
 namespace StoreApp.Domain.Interfaces
 {

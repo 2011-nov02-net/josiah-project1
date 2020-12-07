@@ -18,7 +18,10 @@ namespace StoreApp.WebApp.Controllers
         {
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
         }
-
+        /// <summary>
+        /// returns a view containing all orders with their details
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             var data = await repo.GetAllOrdersAsync();
@@ -32,7 +35,12 @@ namespace StoreApp.WebApp.Controllers
             });
             return View(orders);
         }
-
+        /// <summary>
+        /// returns a view containing drop down fields to place an order, redirects to addproduct
+        /// when pressing the add product button and redirects to finalize, when create order is pressed
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Create(PlaceOrderViewModel viewModel)
         {
             if (viewModel.New)
@@ -74,6 +82,11 @@ namespace StoreApp.WebApp.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// adds the selected product and amount to the cart which is then displayed to the user in the create view
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         public IActionResult AddProduct(PlaceOrderViewModel viewModel)
         {
@@ -118,6 +131,11 @@ namespace StoreApp.WebApp.Controllers
                 return RedirectToAction(nameof(Create), viewModel);
             }
         }
+        /// <summary>
+        /// takes the list of items in the cart by the user and creates the order, then redirects to index
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Finalize(PlaceOrderViewModel viewModel)
         {

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace StoreApp.WebApp.Helpers
 {
+    /// <summary>
+    /// simple helper to convert a viewmodel to order 
+    /// </summary>
     public class OrderHelper
     {
         public static Order ViewToOrder(PlaceOrderViewModel order)

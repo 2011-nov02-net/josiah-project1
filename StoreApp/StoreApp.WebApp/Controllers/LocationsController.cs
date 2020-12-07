@@ -14,6 +14,11 @@ namespace StoreApp.WebApp.Controllers
         private IStoreRepository repo { get; }
         public LocationsController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
+
+        /// <summary>
+        /// lists all locations along with a link to view their orders and inventories
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             var data = await repo.GetAllLocationsAsync();
@@ -25,10 +30,20 @@ namespace StoreApp.WebApp.Controllers
 
             return View(locations);
         }
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Create()
         {
             return View();
         }
+
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LocationViewModel viewModel)
@@ -52,6 +67,11 @@ namespace StoreApp.WebApp.Controllers
                 return View(viewModel);
             }
         }
+        /// <summary>
+        /// return a view containing all of the orders of a given location id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Orders(int id)
         {
             var location = await repo.GetLocationDetailsAsync(id);
@@ -79,6 +99,12 @@ namespace StoreApp.WebApp.Controllers
 
             return View(viewLocation);
         }
+
+        /// <summary>
+        /// returns a view containing the inventory items and amount for each location
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Inventory(int id)
         {
             var location = await repo.GetLocationDetailsAsync(id);

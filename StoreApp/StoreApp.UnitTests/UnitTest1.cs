@@ -178,9 +178,5 @@ namespace StoreApp.UnitTests
                 .Single(l => l.Name == "Walmart");
             Assert.Equal(product.Name, productActual.Name);
         }
-
-
-
     }
-
 }

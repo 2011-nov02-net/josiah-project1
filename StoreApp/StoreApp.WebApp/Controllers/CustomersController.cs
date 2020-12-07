@@ -14,7 +14,12 @@ namespace StoreApp.WebApp.Controllers
         private IStoreRepository repo { get; }
         public CustomersController(IStoreRepository Repo) =>
             repo = Repo ?? throw new ArgumentNullException(nameof(repo));
-
+        
+        /// <summary>
+        /// Index of all customers, contains a search box so you can filter through customer names
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Index(string searchString)
         {
             IEnumerable<Customer> data;
@@ -36,10 +41,19 @@ namespace StoreApp.WebApp.Controllers
 
             return View(customers);
         }
+        /// <summary>
+        /// returns view for a form to create a new customer
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Create()
         {
             return View();
         }
+        /// <summary>
+        /// validates the form from the user, then redirects to the index page
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerViewModel viewModel)
@@ -65,6 +79,11 @@ namespace StoreApp.WebApp.Controllers
                 return View(viewModel);
             }
         }
+        /// <summary>
+        /// returns view containing all the orders by a customer through their id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Orders(int id)
         {
             var data = await repo.GetOrdersByCustomerAsync(id);

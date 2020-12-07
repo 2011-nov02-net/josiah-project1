@@ -6,6 +6,9 @@ using StoreApp.Domain.Model;
 
 namespace StoreApp.Domain.Interfaces
 {
+    /// <summary>
+    /// Interface for store repository, more details for each function are in the derived class
+    /// </summary>
     public interface IStoreRepository
     {
         public void AddCustomer(Customer customer);
